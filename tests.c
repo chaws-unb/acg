@@ -17,7 +17,7 @@ void runAllTests();
 void runAllTests()
 {
 	test_substitutionCipher();
-	//test_transpositionCipher();
+	test_transpositionCipher();
 	//test_productCipher();
 }
 
@@ -47,8 +47,8 @@ void test_transpositionCipher()
 {
 	printf("*** Test: transpositionCipher() ***\n");
 
-	int key = 0xBABAD0;
-	const char * plainText = "This is my cool stuffed text with words computador and seguranca";
+	int key = 0x01010101;
+	const char * plainText = "This is my cool stuffed text with words computador and seguranca and testing the other thing that is the pad";
 	size_t length = strlen(plainText);
 	char * cipheredText = transpositionCipher(plainText, length, key);
 	char * decipheredText = transpositionDecipher(cipheredText, length, key);
