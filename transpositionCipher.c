@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 extern const char alphabet[];
 
@@ -23,7 +24,8 @@ char * transpositionCipher(const char * plainText, size_t length, int key)
 	{
 		
 		for(; blockIndex < BLOCK_SIZE; blockIndex++){
-			newPosition = (blockIndex ^ key) % BLOCK_SIZE;
+			newPosition = abs(blockIndex ^ key) % BLOCK_SIZE;
+			//printf("blockIndex = %i, key = %X, newPosition = %i\n", blockIndex, key, newPosition);
 			newBlock[newPosition] = plainTextInt[cipherIndex + blockIndex];			
 		}
 

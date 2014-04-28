@@ -24,6 +24,7 @@ char compareToAlphabet(const char * string, size_t length);
  */
 char *   substitutionCipher(const char * plainText, size_t length, int key);
 char * substitutionDecipher(const char * cipheredText, size_t length, int key);
+char * 	  crackSubstitution(char * cipheredText, size_t length);
 
 /**
  *	Cipher the plain text using a transposition cipher
