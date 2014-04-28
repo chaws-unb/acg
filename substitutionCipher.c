@@ -17,11 +17,11 @@ void checkTableOfSubstitutionChars()
 		{
 			for(j = 0; j < ALPHABET_LENGTH; j++)
 			{
-				printf("%s\n", );
+				printf("\n" );
 			}
 		}
 		else
-			printf("No reference for %c\n", );
+			printf("No reference for \n" );
 	}
 }
 

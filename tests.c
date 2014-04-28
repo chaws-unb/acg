@@ -16,7 +16,7 @@ void runAllTests();
  */
 void runAllTests()
 {
-	test_substitutionCipher();
+	//test_substitutionCipher();
 	test_transpositionCipher();
 	//test_productCipher();
 }
@@ -29,7 +29,7 @@ void test_substitutionCipher()
 	printf("*** Test: substitutionCipher() ***\n");
 
 	int key = 0x01010101;
-	const char * plainText = "This is my cool stuffed text with words computador and seguranca";
+	const char * plainText = "O modo de seguranca e util para solucionar problemas com programas e drivers que talvez nao iniciem corretamente ou que podem impedir que o Windows seja iniciado corretamente Se um problema nao se repetir quando o computador for iniciado no modo de seguranca voce podera eliminar as configuracoes padrao e os drivers de dispositivo basicos como as possiveis causas Se um programa dispositivo ou driver instalado recentemente impedir a execucao correta do Windows voce podera iniciar o computador no modo de seguranca e em seguida remover o programa que esta causando o problema Qualquer usuario independente do tipo de uso do computador pode ser um alvo maravilhoso para os 454785 maliciosos desenvolvedores de pragas virtuais principalmente porque cada equipamento infectado tem a capacidade de infectar uma quantidade absurda de outros computadores sem o conhecimento do proprietario Voce sabia que pode pegar  um virus somente por acessar sites infectados Basta que sua maquina nao esteja protegida devidamente ou que voce esteja utilizando softwares desatualizados Coisa serias";
 	size_t length = strlen(plainText);
 	char * cipheredText = substitutionCipher(plainText, length, key);
 	char * decipheredText = substitutionDecipher(cipheredText, length, key);
@@ -47,8 +47,8 @@ void test_transpositionCipher()
 {
 	printf("*** Test: transpositionCipher() ***\n");
 
-	int key = 0x01010101;
-	const char * plainText = "This is my cool stuffed text with words computador and seguranca and testing the other thing that is the pad";
+	int key = 0x01;
+	const char * plainText = "O modo de seguranca e util para solucionar problemas com programas e drivers que talvez nao iniciem corretamente ou que podem impedir que o Windows seja iniciado corretamente Se um problema nao se repetir quando o computador for iniciado no modo de seguranca voce podera eliminar as configuracoes padrao e os drivers de dispositivo basicos como as possiveis causas Se um programa dispositivo ou driver instalado recentemente impedir a execucao correta do Windows voce podera iniciar o computador no modo de seguranca e em seguida remover o programa que esta causando o problema Qualquer usuario independente do tipo de uso do computador pode ser um alvo maravilhoso para os 454785 maliciosos desenvolvedores de pragas virtuais principalmente porque cada equipamento infectado tem a capacidade de infectar uma quantidade absurda de outros computadores sem o conhecimento do proprietario Voce sabia que pode pegar  um virus somente por acessar sites infectados Basta que sua maquina nao esteja protegida devidamente ou que voce esteja utilizando softwares desatualizados Coisa serias";
 	size_t length = strlen(plainText);
 	char * cipheredText = transpositionCipher(plainText, length, key);
 	char * decipheredText = transpositionDecipher(cipheredText, length, key);
@@ -67,7 +67,7 @@ void test_productCipher()
 	printf("*** Test: productCipher() ***\n");
 
 	int key = 0xBABAD0;
-	const char * plainText = "This is my cool stuffed text with words computador and seguranca";
+	const char * plainText = "O modo de seguranca e util para solucionar problemas com programas e drivers que talvez nao iniciem corretamente ou que podem impedir que o Windows seja iniciado corretamente Se um problema nao se repetir quando o computador for iniciado no modo de seguranca voce podera eliminar as configuracoes padrao e os drivers de dispositivo basicos como as possiveis causas Se um programa dispositivo ou driver instalado recentemente impedir a execucao correta do Windows voce podera iniciar o computador no modo de seguranca e em seguida remover o programa que esta causando o problema Qualquer usuario independente do tipo de uso do computador pode ser um alvo maravilhoso para os 454785 maliciosos desenvolvedores de pragas virtuais principalmente porque cada equipamento infectado tem a capacidade de infectar uma quantidade absurda de outros computadores sem o conhecimento do proprietario Voce sabia que pode pegar  um virus somente por acessar sites infectados Basta que sua maquina nao esteja protegida devidamente ou que voce esteja utilizando softwares desatualizados Coisa serias";
 	size_t length = strlen(plainText);
 	char * cipheredText = productCipher(plainText, length, key);
 	char * decipheredText = productDecipher(cipheredText, length, key);

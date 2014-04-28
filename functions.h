@@ -5,7 +5,7 @@
 
 #define DEBUG 1
 #define LAST_ASCII_CHAR_INDEX 123
-#define BLOCK_SIZE 64
+#define BLOCK_SIZE 8
 #define DOUBLE_KEY_SIZE 2 * sizeof(int)
 
 // The size of this alphabet, with uper, lower cases, numbers and space
