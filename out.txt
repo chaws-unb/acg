@@ -2,10 +2,22 @@
 
 *** DEBUG: Substitution table:
 *** DEBUG: Alphabet:  0 1 2 3 4 5 6 7 8 9 A B C D E F G H I J K L M N O P Q R S T U V W Y X Z a b c d e f g h i j k l m n o p q r s t u v w y x z 
-*** DEBUG: SubTable:  z x y u q o m 7 i g e a X Y S F Q O K I G C A N 6 5 3 1 0 2 4 V 8 9 B D E H J d L M P R T U W l Z b c f h j k t n p r s v w 
-*** DEBUG: InvTable:  S R T Q U P O 7 W Y M X L Z a F K b J c I e f N H g G h E i j V k D C m B n o d A p 9 q 8 r s l 6 u 5 v 4 w y t 3 x z 2 1 0 
+*** DEBUG: SubTable:z 0 1 2 x y u q 7 8 9 A B C n E F m c I a V L M U S Q O K H G 6 5 W Y X 3   4 D d e f g h i J k l N P o R T r s Z b j p t v w 
+*** DEBUG: InvTable:a 0 1 2 Z b V U 7 8 9 A B C c E F T S I j R L M m Q n P p O q N K W Y X t J u H d e f g h i v k l G D o w 6 r s y 5 x z 4 3   
+
+Plain text is:      Esse eh um texto muito seguro com as palavras seguranca que aplicada ao computador deixa as coisas melhores
+Ciphered text is:   EssezehzbNzZevZozNbiZozsegbrozDoNz szR l jr szsegbr PD zTbez RliD d z ozDoNRbZ dorzdeiv z szDois szNelhores
+Deciphered text is: Esse eh um texto muito seguro com as palavras seguranca que aplicada ao computador deixa as coisas melhores
+*** End of Test: substitutionCipher() ***
+*** Test: transpositionCipher() ***
 
 Plain text is:      This is my cool stuffed text with words computador and seguranca
-Ciphered text is:   Onp5Lp5LvDLfxx6L5E8iihzLEhGELCpEnLCx4z5Lfxv08Eazx4LayzL5hl84ayfa
-Deciphered text is: 
-*** End of Test: substitutionCipher() ***
+Ciphered text is:   (null)
+Deciphered text is: (null)
+*** End of Test: transpositionCipher() ***
+*** Test: productCipher() ***
+
+Plain text is:      This is my cool stuffed text with words computador and seguranca
+Ciphered text is:   (null)
+Deciphered text is: (null)
+*** End of Test: productCipher() ***

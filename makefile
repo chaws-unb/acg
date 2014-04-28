@@ -11,7 +11,7 @@ OBJECT_DIR=obj
 BIN_DIR=bin
 
 CC=gcc
-CFLAGS=-I$(INCLUDE_DIR)
+CFLAGS=-I$(INCLUDE_DIR) -lm
 
 _DEPS = functions.h
 DEPS = $(patsubst %,$(INCLUDE_DIR)/%,$(_DEPS))

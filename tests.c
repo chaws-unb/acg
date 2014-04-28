@@ -28,10 +28,10 @@ void test_substitutionCipher()
 {
 	printf("*** Test: substitutionCipher() ***\n");
 
-	int key = 0x01010101;
-	//key = 0xFFFFFFFF;
-	//key = 2;
-	const char * plainText = "This is my cool stuffed text with words computador and seguranca";
+	int key = 0x01010100;
+	key = 0xBABAD0 + 0xF043E;
+	//key = 0x1;
+	const char * plainText = "Esse eh um texto muito seguro com as palavras seguranca que aplicada ao computador deixa as coisas melhores";
 	size_t length = strlen(plainText);
 	char * cipheredText = substitutionCipher(plainText, length, key);
 	char * decipheredText = substitutionDecipher(cipheredText, length, key);

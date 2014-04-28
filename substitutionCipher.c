@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 #define TABLE(i) (tableOfSubstitutionChars[alphabet[(i)]])
 #define CHAR(c) (tableAlphabetIndex[(c)])
@@ -97,7 +98,6 @@ static void passWhereKeyBitIs1(int key)
 	int byteIndex, bitIndex, alphIndex, zeroIndex = 0;
 	char leftOrRight = 0; // 0 - L, 1 - R
 	char substituteChar;
-
 	// Now, pass all posititions where key bit == 1
 	for(byteIndex = 0; byteIndex < DOUBLE_KEY_SIZE; byteIndex++)
 	{
@@ -105,14 +105,17 @@ static void passWhereKeyBitIs1(int key)
 		byte = getByte(key, byteIndex);
 		for(bitIndex = 0; bitIndex < 8 && alphIndex < ALPHABET_LENGTH; bitIndex++, alphIndex++)
 		{
+//printf("Passing where bit == 1, alphIndex = %i\n", alphIndex);
 			if(byte & (1 << bitIndex))
 			{
 				TABLE(alphIndex) = alphabet[alphIndex];
+				//printf("TABLE(alphIndex) = %c\n", alphabet[alphIndex]);
 			}
 			else
 			{
+				//printf("TABLE(alphIndex) = -\n");
 				TABLE(alphIndex) = '-';
-				charsNeededToMove[zeroIndex++] = alphIndex;
+				charsNeededToMove[zeroIndex++] = alphIndex + 1;
 			}
 		}
 	}
@@ -166,7 +169,7 @@ static void crazilyShift()
 
 	// Let the duty begin
 	for(alphIndex = strlen(charsNeededToMove) - 1; alphIndex >= 0; alphIndex--)
-		shiftPosition(charsNeededToMove[alphIndex], &lastLeft, &lastRight, &leftOrRight);
+		shiftPosition(charsNeededToMove[alphIndex] - 1, &lastLeft, &lastRight, &leftOrRight);
 }
 
 static char initTableOfSubstitutionChars(int key)
@@ -212,12 +215,21 @@ static char * substitute(const char * plainText, size_t length, int key, char fo
 		if(forwardOrBackward)
 		{
 			newChar = tableOfSubstitutionChars[oldChar];
-			cipheredText[cipherIndex] = alphabet[(CHAR(newChar) + key) % ALPHABET_LENGTH];
+			//printf("[%c] => %c\n", oldChar, newChar);
+			//printf("(CHAR(new) + key %% ALPHABET_LENGTH = %i\n", abs(CHAR(newChar) + key) % ALPHABET_LENGTH);
+			//cipheredText[cipherIndex] = alphabet[abs((CHAR(newChar) + key) % ALPHABET_LENGTH)];
+			cipheredText[cipherIndex] = newChar;
+			//printf("ciphered %c\n", cipheredText[cipherIndex]);
 		}
 		else
 		{
-			newChar = alphabet[(CHAR(oldChar) - key) % ALPHABET_LENGTH];	
-			cipheredText[cipherIndex] = tableOfSubstitutionCharsInv[newChar];
+			//printf("Received %c\n", oldChar);
+			//printf("(CHAR(oldChar) - key %% ALPHABET_LENGTH = %i\n", abs(CHAR(oldChar) - key) % ALPHABET_LENGTH);
+			//newChar = alphabet[abs((CHAR(oldChar) - key) % ALPHABET_LENGTH)];	
+			//printf("new char %c\n", newChar);
+			//cipheredText[cipherIndex] = tableOfSubstitutionCharsInv[newChar];
+			//printf("Plain %c\n", cipheredText[cipherIndex]);
+			cipheredText[cipherIndex] = tableOfSubstitutionCharsInv[oldChar];
 		}
 	}
 	return cipheredText;
