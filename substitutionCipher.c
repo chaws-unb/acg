@@ -1,48 +1,55 @@
 #include <functions.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+#include <math.h>
+
+#define TABLE(i) (tableOfSubstitutionChars[alphabet[(i)]])
+#define CHAR(c) (tableAlphabetIndex[(c)])
+#define FORWARD 1
+#define BACKWARD 0
 
 extern const char alphabet[];
+
+/**
+ *	Stores forwards substitution
+ */
 static char tableOfSubstitutionChars[LAST_ASCII_CHAR_INDEX] = {0};
-static char tableOfSubstitutionCharsInverted[LAST_ASCII_CHAR_INDEX] = {0};
 
-void checkTableOfSubstitutionChars()
-{
-	printf("Checking tableOfSubstitutionChars\n");
-	char * table = tableOfSubstitutionChars;
-	int i, j;
-	for(i = 0; i < ALPHABET_LENGTH; i++)
-	{
-		if(table[alphabet[i]])
-		{
-			for(j = 0; j < ALPHABET_LENGTH; j++)
-			{
-				printf("\n" );
-			}
-		}
-		else
-			printf("No reference for \n" );
-	}
-}
+/** 
+ *	Stores backwards substitution
+ */	
+static char tableOfSubstitutionCharsInv[LAST_ASCII_CHAR_INDEX] = {0};
 
-void printTables()
+/**
+ *	Stores customized ASCII indexes
+ */
+static char tableAlphabetIndex[LAST_ASCII_CHAR_INDEX] = {0};
+
+/** 
+ *	Stores characteres that need to shift (because of key bit)
+ */
+static char charsNeededToMove[ALPHABET_LENGTH] = {0};	
+
+static void printTables()
 {
 	// DEBUGing
 	if(DEBUG)
 	{
 		int i;
 		printf("\n*** DEBUG: Substitution table:");
-		printf("\n*** DEBUG: ");
+		printf("\n*** DEBUG: Alphabet:");
 		for(i = 0; i < ALPHABET_LENGTH; i++)
 			printf("%c ", alphabet[i]);
 
-		printf("\n*** DEBUG: ");
+		printf("\n*** DEBUG: SubTable:");
 		for(i = 0; i < ALPHABET_LENGTH; i++)
-			printf("%c ", tableOfSubstitutionChars[alphabet[i]]);
+			printf("%c ", TABLE(i));
 
-		printf("\n*** DEBUG: ");
+		printf("\n*** DEBUG: InvTable:");
 		for(i = 0; i < ALPHABET_LENGTH; i++)
-			printf("%c ", tableOfSubstitutionCharsInverted[tableOfSubstitutionChars[alphabet[i]]]);
+			printf("%c ", tableOfSubstitutionCharsInv[alphabet[i]]);
+		printf("\n");
 	}
 }
 
@@ -58,119 +65,163 @@ static char isLittleEndian()
 	return endianess;
 }
 
-static void crazilyShift(int key)
-{	
-	char * table = tableOfSubstitutionChars;
-	unsigned char doubleKey[DOUBLE_KEY_SIZE] = {0};
+static unsigned char getByte(int key, int ith)
+{
+	return (isLittleEndian() ?
+		* (((char *)(&key)) + (ith % sizeof(int))):
+		* (((char *)(&key)) + ((DOUBLE_KEY_SIZE - ith) % sizeof(int)))
+	);
+}
+
+static void passWhereKeyBitIs1(int key)
+{
 	unsigned char byte;
-	int sizeofInt = sizeof(int);
-	int newIndex = 0;
-	int i, j;
-
-	// Init the table
-	//for(i = 0; i < ALPHABET_LENGTH; i++)
-		//table[alphabet[i]] = alphabet[i];
-
-	// Goes through number of bytes of the key
-	for(i = 0; i < DOUBLE_KEY_SIZE; i++)
+	int byteIndex, bitIndex, alphIndex, zeroIndex = 0;
+	char leftOrRight = 0; // 0 - L, 1 - R
+	char substituteChar;
+	// Now, pass all posititions where key bit == 1
+	for(byteIndex = 0; byteIndex < DOUBLE_KEY_SIZE; byteIndex++)
 	{
-		byte = (isLittleEndian() ?
-				* (((char *)(&key)) + (i % sizeof(int))):
-				* (((char *)(&key)) + ((DOUBLE_KEY_SIZE - i) % sizeof(int)))
-			   );
-		printf("byte = %X\n", byte);
-
-		// Just copies the chars where the key has 1 as bit
-		for(j = 0; j < 8 && (i * 8 + j) < ALPHABET_LENGTH; j++)
+		alphIndex = byteIndex * 8;
+		byte = getByte(key, byteIndex);
+		for(bitIndex = 0; bitIndex < 8 && alphIndex < ALPHABET_LENGTH; bitIndex++, alphIndex++)
 		{
-			// bit == 1
-			if(byte & (1 << j)) 
+//printf("Passing where bit == 1, alphIndex = %i\n", alphIndex);
+			if(byte & (1 << bitIndex))
 			{
-				table[alphabet[i * 8 + j]] = alphabet[i * 8 + j];
+				TABLE(alphIndex) = alphabet[alphIndex];
+				//printf("TABLE(alphIndex) = %c\n", alphabet[alphIndex]);
 			}
-		}
-		doubleKey[i] = byte;
-	}
-
-	printTables();
-	
-	// Now, move the rest
-	for(i = 0; i < DOUBLE_KEY_SIZE; i++)
-	{
-		// Just copies the chars where the key has 1 as bit
-		for(j = 0; j < 8 && (i * 8 + j) < ALPHABET_LENGTH; j++)
-		{
-			// bit == 0
-			if((doubleKey[i] & (1 << j)) == 0)
+			else
 			{
-				newIndex = i * 8 + j;
-				char oldChar = alphabet[newIndex];
-			INC_NEW_INDEX:
-				newIndex++;
-				newIndex %= ALPHABET_LENGTH;
-				// Check if that position is already in use
-				if(table[alphabet[newIndex]])
-					goto INC_NEW_INDEX;
-
-				table[alphabet[newIndex]] = oldChar;
-				printf("\nSetou %c na posicao %i['%c']\n", alphabet[i * 8 + j], alphabet[i * 8 + j], alphabet[i * 8 + j]);
+				//printf("TABLE(alphIndex) = -\n");
+				TABLE(alphIndex) = '-';
+				charsNeededToMove[zeroIndex++] = alphIndex + 1;
 			}
 		}
 	}
+}
 
-	printTables();
+static void shiftPosition(char alphIndex, char * lastLeft, char * lastRight, char * leftOrRight)
+{
+	char oldChar;
+	char subsIndex;
+	char ll, lr, lor;
+
+	ll  = *lastLeft;
+	lr  = *lastRight;
+	lor = *leftOrRight;
+	oldChar = alphabet[alphIndex];
+	//printf("Finding a new position for %c\n", oldChar);
+
+	// Right
+	if(lor)
+	{
+		while(TABLE(--lr) != '-' && lr >= 0)
+			;//printf("R: lr = %i, TABLE(lr) = %c\n", lr, TABLE(lr));
+		subsIndex = lr;
+	}
+	// Left
+	else
+	{
+		while(TABLE(++ll) != '-' && ll < ALPHABET_LENGTH)
+			;//printf("L: ll = %i, TABLE(ll) = %c\n", ll, TABLE(ll));
+		subsIndex = ll;
+	}
+	//printf("New position is %c\n", alphabet[subsIndex]);
+
+	lor = oldChar & 1;
+
+	TABLE(subsIndex) = oldChar;
+
+	*lastLeft 	= ll;
+	*lastRight 	= lr;
+	*leftOrRight= lor;
+}
+
+static void crazilyShift()
+{	
+	char alphIndex, lastLeft, lastRight, leftOrRight;
+
+	// Helps to find next left or right
+	lastRight = ALPHABET_LENGTH;
+	lastLeft = -1;
+	leftOrRight = 0;
+
+	// Let the duty begin
+	for(alphIndex = strlen(charsNeededToMove) - 1; alphIndex >= 0; alphIndex--)
+		shiftPosition(charsNeededToMove[alphIndex] - 1, &lastLeft, &lastRight, &leftOrRight);
 }
 
 static char initTableOfSubstitutionChars(int key)
 {
-	char * table = tableOfSubstitutionChars;
-	char * invTable = tableOfSubstitutionCharsInverted;
-	unsigned char cipherChar;
-	char plainChar;
+	// Copy the same characters where the key bit == 1
+	passWhereKeyBitIs1(key);
 
+	// Make a kinda crazy shift
+	crazilyShift();
+
+	// Create the inverted and alphabet index tables
 	int i;
-
-	crazilyShift(key);
-
 	for(i = 0; i < ALPHABET_LENGTH; i++)
 	{
-		plainChar = table[alphabet[i]];
-		cipherChar = alphabet[((unsigned char)(plainChar + key)) % ALPHABET_LENGTH];
-		printf("plainChar = %c, cipherChar = %c\n", plainChar, cipherChar);
+		//printf("For TABLE(i) %c=>%c \n", alphabet[i], TABLE(i));
+		tableOfSubstitutionCharsInv[TABLE(i)] = alphabet[i];
 
-		if(DEBUG)
-		{
-			//printf("\n*** DEBUG: [i=%i] plainChar = %c, cipherChar = %i", i, plainChar, cipherChar);
-		}
-
-		// Finally set the substitution table
-		table[plainChar] = cipherChar;
+		// Finally build the alphabet index, to ease calculations
+		tableAlphabetIndex[alphabet[i]] = i;
 	}
 
 	printTables();
-
 	return 1;
+}
+
+static char * substitute(const char * plainText, size_t length, int key, char forwardOrBackward)
+{
+	// Make sure substitution table is ok
+	static int oldKey = 0;
+	if(oldKey != key)
+	{
+		initTableOfSubstitutionChars(key);
+		oldKey = key;
+	}
+
+	int cipherIndex = 0;
+	char * cipheredText = (char *)malloc(sizeof(char) * length);
+	char newChar, oldChar;
+
+	for(; cipherIndex < length; cipherIndex++)
+	{
+		oldChar = plainText[cipherIndex];
+		if(forwardOrBackward)
+		{
+			newChar = tableOfSubstitutionChars[oldChar];
+			//printf("[%c] => %c\n", oldChar, newChar);
+			//printf("(CHAR(new) + key %% ALPHABET_LENGTH = %i\n", abs(CHAR(newChar) + key) % ALPHABET_LENGTH);
+			//cipheredText[cipherIndex] = alphabet[abs((CHAR(newChar) + key) % ALPHABET_LENGTH)];
+			cipheredText[cipherIndex] = newChar;
+			//printf("ciphered %c\n", cipheredText[cipherIndex]);
+		}
+		else
+		{
+			//printf("Received %c\n", oldChar);
+			//printf("(CHAR(oldChar) - key %% ALPHABET_LENGTH = %i\n", abs(CHAR(oldChar) - key) % ALPHABET_LENGTH);
+			//newChar = alphabet[abs((CHAR(oldChar) - key) % ALPHABET_LENGTH)];	
+			//printf("new char %c\n", newChar);
+			//cipheredText[cipherIndex] = tableOfSubstitutionCharsInv[newChar];
+			//printf("Plain %c\n", cipheredText[cipherIndex]);
+			cipheredText[cipherIndex] = tableOfSubstitutionCharsInv[oldChar];
+		}
+	}
+	return cipheredText;
 }
 
 char * substitutionCipher(const char * plainText, size_t length, int key)
 {
-	// Make sure substitution table is ok
-	static char tableInitialized = 0;	
-	if(!tableInitialized)
-		tableInitialized = initTableOfSubstitutionChars(key);
-
 	if(!plainText)
 		return;
 
-	int cipherIndex = 0;
-	char * cipheredText = (char *)malloc(sizeof(char) * length);
-
-	for(; cipherIndex < length; cipherIndex++)
-	{
-		char oldChar = plainText[cipherIndex];
-		char newChar = tableOfSubstitutionChars[oldChar];
-		cipheredText[cipherIndex] = newChar;
-	}
+	char * cipheredText = substitute(plainText, length, key, FORWARD);
 
 	return cipheredText;
 }
@@ -180,7 +231,7 @@ char * substitutionDecipher(const char * cipheredText, size_t length, int key)
 	if(!cipheredText)
 		return NULL;
 
+	char * plainText = substitute(cipheredText, length, key, BACKWARD);
 
-
-	return NULL;
+	return plainText;
 }
