@@ -23,14 +23,8 @@ close($possibilities_file);
 
 my $tree = $dict_pattern->search_pattern(@possibilities);
 
-print "Resultados:\n";
-#foreach my $expression (keys $tree)
-#{
-#  print "$expression\n";
-#  my @occur = $tree->{$expression};
-#  print join(" ",@occur);
-#  print "\n";
-#}
-
+#print "Resultados:\n";
 
 print Dumper($tree);
+#
+
