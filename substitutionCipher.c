@@ -77,16 +77,22 @@ static char isLittleEndian()
 static char * shell_exec(char * cmd)
 {
 	FILE * pipe = popen(cmd, "r");
-
-	if (pipe == NULL)
+	if(pipe == NULL)
 		return NULL;
 
-	char * buffer = (char *)malloc(sizeof(char) * 4096);
+	char * buffer = (char *)malloc(sizeof(char) * 128);
 
-	if(!feof(pipe) && fgets(buffer, 128, pipe) != NULL)
+	if(fgets(buffer, 128, pipe) != NULL)
 		return buffer;
-	free(buffer);
+	//free(buffer);
 	return NULL;
+}
+
+static void strtolower(char * str, size_t length)
+{
+	int i;
+	for(i = 0; i < length; i++)
+		str[i] = tolower(str[i]);
 }
 
 static unsigned char getByte(int key, int ith)
@@ -500,48 +506,47 @@ char * breakIt(const char * cipheredText, size_t length)
 void resolveWords(char * broken, size_t length)
 {
 	int i, j, wordLength = 0;
-	char * word, search[128];
-
-	char * basicCmd = "grep ";
+	char word[128];
+	char * basicCmd = "grep -i ";
 	char * cmd = (char *)malloc(sizeof(char) * 256);
 	char * words;
-	return;
-	for(i = 0; i < length; i += wordLength + 1)
+	for(i = 0; i < length; i++)
 	{
+		// Capture a word
 		wordLength = 0;
-		word = broken + i;
-		while(wordLength < length && word[wordLength] != ' ' || word[wordLength] == '\0')
-			wordLength++;
+		while(i < length && broken[i] != ' ')
+			word[wordLength++] = broken[i++];
+
+		//printf("i = %i, wordLength = %i\n", i, wordLength);
 
 		// Check if that word has '.'
 		j = wordLength;
 		while(--j > -1 && word[j] != '.');
 
+		//printf("j = %i\n", j);
 		// Ops! the word seems complete
-		if(j == -1)
+		if(j == -1 || wordLength < 2)
 			continue;
 
-		continue;
-		strncpy(search, word, wordLength);
-		search[wordLength] = '\0';
-		printf("search = %s\n", search);
-		printf("word = %s\n", word);
-		continue;
+		word[wordLength] = '\0';
+		//printf("word = %s\n", word);
+		//printf("broken = %s\n", &broken[i]);
 
 		// Build the cmd
-		strncpy(cmd, basicCmd, 5);
-		strcpy(cmd + 5, "^");
-		//strncpy(cmd + 6, search, );
-		strcpy(cmd + 6 + wordLength, "$");
-		strcpy(cmd + 7 + wordLength, DICTIONARY);
+		strncpy(cmd, basicCmd, 8);
+		strcpy(cmd + 8, "^");
+		strcpy(cmd + 9, word);
+		strcpy(cmd + 9 + wordLength, "$");
+		strcpy(cmd + 10 + wordLength, DICTIONARY);
+		words = shell_exec(cmd);
+		if(words == NULL || strlen(words) < 2)
+			continue;
+		
+		//printf("words = %s\n", words);
 
-		/*words = shell_exec(cmd);
-		printf("words = %s\n", words);
 		// Found a match, change the reference in the broken text
-		if(strlen(words) > 1)
-		{
-			strncpy(word, words, wordLength);
-		}*/
+		strtolower(words, wordLength);
+		strncpy(&broken[i - wordLength], words, wordLength);
 	}
 
 	//free(cmd);

@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 
-#define DEBUG 1
+#define DEBUG 0
 #define LAST_ASCII_CHAR_INDEX 123
 #define BLOCK_SIZE 8
 #define DOUBLE_KEY_SIZE 2 * sizeof(int)
