@@ -1,42 +1,37 @@
 #include <functions.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
 #include <math.h>
-
-extern const char alphabet[];
 
 char * transpositionCipher(const char * plainText, size_t length, int key)
 {
 	if(!plainText)
 		return NULL;
 
-	int cipherIndex = 0, blockIndex = 0, newPosition = 0, addValueToCipherIndex = 0;
-	int i = 0;
-	char newBlock[BLOCK_SIZE];
-	int resto = ((int) length) % BLOCK_SIZE;
-	int size = (int) length + resto;
-	char * cipheredText = (char *)malloc(sizeof(char) * size);
-	char * plainTextInt = (char *)malloc(sizeof(char) * size);
-	memcpy(plainTextInt, plainText, (int)length);
-
-	for(; cipherIndex <= size; cipherIndex+=BLOCK_SIZE)
-	{
-		
-		for(; blockIndex < BLOCK_SIZE; blockIndex++){
-			newPosition = abs(blockIndex ^ key) % BLOCK_SIZE;
-			//printf("blockIndex = %i, key = %X, newPosition = %i\n", blockIndex, key, newPosition);
-			newBlock[newPosition] = plainTextInt[cipherIndex + blockIndex];			
+	char * cipheredText = (char *)malloc(sizeof(char) * length);
+	int rows = ((int)length / BLOCK_SIZE) + (((int)length % BLOCK_SIZE) ? 1 : 0);
+	char * text = (char *)malloc(rows*BLOCK_SIZE);
+	//Idéia é transformar a chave em um vetor do estilo:
+	int keyColumn[BLOCK_SIZE] = {4,2,0,7,5,1,6,3};
+	int i = 0,j = 0, pi = 0;
+	for(;i < rows; i++){
+		for(;j < BLOCK_SIZE; j++){
+			text[i * BLOCK_SIZE + j] = plainText[pi] == '\0' ? ' ' : plainText[pi++];
+			printf("%c", text[i * BLOCK_SIZE + j]);
+			if( j == 7){
+				printf("\n");
+			}
 		}
-
-		for(; addValueToCipherIndex < BLOCK_SIZE; addValueToCipherIndex++){
-			cipheredText[cipherIndex + addValueToCipherIndex] = newBlock[addValueToCipherIndex];
-		}
-
-		blockIndex = 0;
-		addValueToCipherIndex = 0;
+	 j = 0;
 	}
 
+	int indexI = 0, indexJ = 0, ci = 0;
+	for(; indexI < BLOCK_SIZE ; indexI++){
+		for(;indexJ < rows ; indexJ++){
+			cipheredText[ci++] = text[indexJ * BLOCK_SIZE + keyColumn[indexI]];
+		}
+		indexJ = 0;
+	}
 
 	return cipheredText;
 }
@@ -46,28 +41,37 @@ char * transpositionDecipher(const char * cipheredText, size_t length, int key)
 	if(!cipheredText)
 		return NULL;
 
-	int decipherIndex = 0, blockIndex = 0, newPosition = 0, addValueToDecipherIndex = 0;
-	int i = 0;
-	int j = 0;
-	char newBlock[BLOCK_SIZE];
 	char * plainText = (char *)malloc(sizeof(char) * length);
-
-	for(; decipherIndex < length; decipherIndex+=BLOCK_SIZE)
-	{
-		
-		for(; blockIndex < BLOCK_SIZE; blockIndex++){
-			newPosition = (blockIndex ^ key) % BLOCK_SIZE;
-			newBlock[newPosition] = cipheredText[decipherIndex + blockIndex];			
+	int rows = ((int)length / BLOCK_SIZE) + (((int)length % BLOCK_SIZE) ? 1 : 0);
+	char * text = (char *)malloc(rows*BLOCK_SIZE);
+	//Idéia é transformar a chave em um vetor do estilo:
+	int keyColumn[BLOCK_SIZE] = {4,2,0,7,5,1,6,3};
+	int i = 0,j = 0, pi = 0;
+	printf("----------------------DECIPHER--------------------\n");
+	for(;i < BLOCK_SIZE; i++){
+		for(;j < rows; j++){
+			text[j * BLOCK_SIZE + i] = cipheredText[pi] == '\0' ? ' ' : cipheredText[pi++];
 		}
-
-		for(; addValueToDecipherIndex < BLOCK_SIZE; addValueToDecipherIndex++){
-			plainText[decipherIndex + addValueToDecipherIndex] = newBlock[addValueToDecipherIndex];
+	 j = 0;
+	}
+	int k = 0, l=0;
+	for(; k < rows; k++){
+		for(;l< BLOCK_SIZE; l++){
+			printf("%c", text[k*BLOCK_SIZE+l]);
+			if(l == 7){
+				printf("\n");
+			}
 		}
-
-		blockIndex = 0;
-		addValueToDecipherIndex = 0;
+		l=0;
 	}
 
-		return plainText;
-	
+	int indexI = 0, indexJ = 0, ci = 0;
+	for(; indexI < rows ; indexI++){
+		for(;indexJ < BLOCK_SIZE ; indexJ++){
+			plainText[ci++] = text[indexI * BLOCK_SIZE + keyColumn[indexJ]];
+		}
+		indexJ = 0;
+	}
+
+	return plainText;
 }

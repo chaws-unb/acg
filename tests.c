@@ -11,6 +11,7 @@ void test_transpositionCipher();
 void test_productCipher();
 void runAllTests();
 int key = 0x10;
+int keyTransposition = 0xDAFCEB;
 const char * plainText = "O modo de seguranca e util para solucionar problemas com programas e drivers que talvez nao iniciem corretamente ou que podem impedir que o Windows seja iniciado corretamente Se um problema nao se repetir quando o computador for iniciado no modo de seguranca voce podera eliminar as configuracoes padrao e os drivers de dispositivo basicos como as possiveis causas Se um programa dispositivo ou driver instalado recentemente impedir a execucao correta do Windows voce podera iniciar o computador no modo de seguranca e em seguida remover o programa que esta causando o problema Qualquer usuario independente do tipo de uso do computador pode ser um alvo maravilhoso para os 454785 maliciosos desenvolvedores de pragas virtuais principalmente porque cada equipamento infectado tem a capacidade de infectar uma quantidade absurda de outros computadores sem o conhecimento do proprietario Voce sabia que pode pegar  um virus somente por acessar sites infectados Basta que sua maquina nao esteja protegida devidamente ou que voce esteja utilizando softwares desatualizados Coisa serias";
 size_t length;
 
@@ -19,9 +20,9 @@ size_t length;
  */
 void runAllTests()
 {
-	test_substitutionCipher();
+	//test_substitutionCipher();
 	test_transpositionCipher();
-	test_productCipher();
+	//test_productCipher();
 }
 
 /**
@@ -49,8 +50,8 @@ void test_transpositionCipher()
 {
 	printf("*** Test: transpositionCipher() ***\n");
 
-	char * cipheredText = transpositionCipher(plainText, length, key);
-	char * decipheredText = transpositionDecipher(cipheredText, length, key);
+	char * cipheredText = transpositionCipher(plainText, length, keyTransposition);
+	char * decipheredText = transpositionDecipher(cipheredText, length, keyTransposition);
 
 	printf("\nPlain text is:      %s\n", plainText);
 	printf("Ciphered text is:   %s\n", cipheredText);
