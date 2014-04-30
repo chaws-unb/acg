@@ -19,7 +19,7 @@ char * productDecipher(const char * cipheredText, size_t length, int key)
 		return NULL;
 
 	char * transDeciphered = transpositionDecipher(cipheredText, length, key);
-	char * subsDeciphered = substitutionDecipher(cipheredText, length, key);
+	char * subsDeciphered = substitutionDecipher(transDeciphered, length, key);
 
 	return subsDeciphered;
 }

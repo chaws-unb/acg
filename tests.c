@@ -20,9 +20,9 @@ size_t length;
  */
 void runAllTests()
 {
-	//test_substitutionCipher();
+	test_substitutionCipher();
 	test_transpositionCipher();
-	//test_productCipher();
+	test_productCipher();
 }
 
 /**
