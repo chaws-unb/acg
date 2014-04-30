@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 
-#define DEBUG 1
+#define DEBUG 0
 #define LAST_ASCII_CHAR_INDEX 123
 #define BLOCK_SIZE 8
 #define DOUBLE_KEY_SIZE 2 * sizeof(int)
@@ -24,6 +24,7 @@ char compareToAlphabet(const char * string, size_t length);
  */
 char *   substitutionCipher(const char * plainText, size_t length, int key);
 char * substitutionDecipher(const char * cipheredText, size_t length, int key);
+char * 	  crackSubstitution(char * cipheredText, size_t length);
 
 /**
  *	Cipher the plain text using a transposition cipher

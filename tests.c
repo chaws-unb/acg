@@ -10,6 +10,10 @@ void test_substitutionCipher();
 void test_transpositionCipher();
 void test_productCipher();
 void runAllTests();
+int key = 0x10;
+int keyTransposition = 0xCDF86BDB;
+const char * plainText = "O modo de seguranca e util para solucionar problemas com programas e drivers que talvez nao iniciem corretamente ou que podem impedir que o Windows seja iniciado corretamente Se um problema nao se repetir quando o computador for iniciado no modo de seguranca voce podera eliminar as configuracoes padrao e os drivers de dispositivo basicos como as possiveis causas Se um programa dispositivo ou driver instalado recentemente impedir a execucao correta do Windows voce podera iniciar o computador no modo de seguranca e em seguida remover o programa que esta causando o problema Qualquer usuario independente do tipo de uso do computador pode ser um alvo maravilhoso para os 454785 maliciosos desenvolvedores de pragas virtuais principalmente porque cada equipamento infectado tem a capacidade de infectar uma quantidade absurda de outros computadores sem o conhecimento do proprietario Voce sabia que pode pegar  um virus somente por acessar sites infectados Basta que sua maquina nao esteja protegida devidamente ou que voce esteja utilizando softwares desatualizados Coisa serias";
+size_t length;
 
 /**
  *	Please, add the new tests to this method
@@ -17,8 +21,8 @@ void runAllTests();
 void runAllTests()
 {
 	test_substitutionCipher();
-	//test_transpositionCipher();
-	//test_productCipher();
+	test_transpositionCipher();
+	test_productCipher();
 }
 
 /**
@@ -28,15 +32,14 @@ void test_substitutionCipher()
 {
 	printf("*** Test: substitutionCipher() ***\n");
 
-	int key = 0x01010101;
-	const char * plainText = "This is my cool stuffed text with words computador and seguranca";
-	size_t length = strlen(plainText);
 	char * cipheredText = substitutionCipher(plainText, length, key);
 	char * decipheredText = substitutionDecipher(cipheredText, length, key);
+	char * analysis = crackSubstitution(cipheredText, length);
 
-	printf("\nPlain text is:      %s\n", plainText);
-	printf("Ciphered text is:   %s\n", cipheredText);
+	printf("\nPlain text is     : %s\n", plainText);
+	printf("Ciphered text is  : %s\n", cipheredText);
 	printf("Deciphered text is: %s\n", decipheredText);
+	printf("Broken text is    : %s\n", analysis);
 	printf("*** End of Test: substitutionCipher() ***\n");
 }
 
@@ -47,15 +50,12 @@ void test_transpositionCipher()
 {
 	printf("*** Test: transpositionCipher() ***\n");
 
-	int key = 0xBABAD0;
-	const char * plainText = "This is my cool stuffed text with words computador and seguranca";
-	size_t length = strlen(plainText);
-	char * cipheredText = transpositionCipher(plainText, length, key);
-	char * decipheredText = transpositionDecipher(cipheredText, length, key);
+	char * cipheredText = transpositionCipher(plainText, length, keyTransposition);
+	char * decipheredText = transpositionDecipher(cipheredText, length, keyTransposition);
 
-	printf("\nPlain text is:      %s\n", plainText);
-	printf("Ciphered text is:   %s\n", cipheredText);
-	printf("Deciphered text is: %s\n", decipheredText);
+	printf("\nPlain text is:      %s\n\n", plainText);
+	printf("Ciphered text is:   %s\n\n", cipheredText);
+	printf("Deciphered text is: %s\n\n", decipheredText);
 	printf("*** End of Test: transpositionCipher() ***\n");
 }
 
@@ -66,9 +66,6 @@ void test_productCipher()
 {
 	printf("*** Test: productCipher() ***\n");
 
-	int key = 0xBABAD0;
-	const char * plainText = "This is my cool stuffed text with words computador and seguranca";
-	size_t length = strlen(plainText);
 	char * cipheredText = productCipher(plainText, length, key);
 	char * decipheredText = productDecipher(cipheredText, length, key);
 
@@ -80,6 +77,7 @@ void test_productCipher()
 
 int main()
 {
+	length = strlen(plainText);
 	runAllTests();
 	return 0;
 }
