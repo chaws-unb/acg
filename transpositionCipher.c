@@ -1,42 +1,57 @@
 #include <functions.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
 #include <math.h>
 
-extern const char alphabet[];
+int * keyColumnGenerator(int key){
+	static int r[8];
+	int i = 0;
+	int j = 0;
+	int value = 0;
+	for(; i < BLOCK_SIZE; i++){
+		value = abs(key % BLOCK_SIZE);
+		key = key >> 4;
+		int ok;
+		do {
+			ok = 1;
+			j = 0;
+			for(;j<i; j++){
+				if(r[j] == value){
+					value += 1 % BLOCK_SIZE;
+					ok = 0;
+					break;
+				}
+			}
+		} while (!ok);
+		r[i] = value;
+	}
+
+	return r;
+}
 
 char * transpositionCipher(const char * plainText, size_t length, int key)
 {
 	if(!plainText)
 		return NULL;
 
-	int cipherIndex = 0, blockIndex = 0, newPosition = 0, addValueToCipherIndex = 0;
-	int i = 0;
-	char newBlock[BLOCK_SIZE];
-	int resto = ((int) length) % BLOCK_SIZE;
-	int size = (int) length + resto;
-	char * cipheredText = (char *)malloc(sizeof(char) * size);
-	char * plainTextInt = (char *)malloc(sizeof(char) * size);
-	memcpy(plainTextInt, plainText, (int)length);
+	int tam = length + length % BLOCK_SIZE + 1;
+	char * cipheredText = (char *)malloc(sizeof(char) * tam);
+	cipheredText[tam - 1] = '\0';
+	int rows = ((int)length / BLOCK_SIZE) + (((int)length % BLOCK_SIZE) ? 1 : 0);
+	char * text = (char *)malloc(rows*BLOCK_SIZE);
+	int *keyColumn;
 
-	for(; cipherIndex <= size; cipherIndex+=BLOCK_SIZE)
-	{
-		
-		for(; blockIndex < BLOCK_SIZE; blockIndex++){
-			newPosition = abs(blockIndex ^ key) % BLOCK_SIZE;
-			//printf("blockIndex = %i, key = %X, newPosition = %i\n", blockIndex, key, newPosition);
-			newBlock[newPosition] = plainTextInt[cipherIndex + blockIndex];			
+	keyColumn = keyColumnGenerator(key);
+	int keyIndex = 0;
+
+	int i = 0,j = 0, pi = 0;
+	for(;i < BLOCK_SIZE; i++){
+		for(;j < rows; j++){
+			pi = j * BLOCK_SIZE + *(keyColumn + i);
+			cipheredText[i * rows + j] = pi < length ? plainText[pi] : '!';
 		}
-
-		for(; addValueToCipherIndex < BLOCK_SIZE; addValueToCipherIndex++){
-			cipheredText[cipherIndex + addValueToCipherIndex] = newBlock[addValueToCipherIndex];
-		}
-
-		blockIndex = 0;
-		addValueToCipherIndex = 0;
+	 j = 0;
 	}
-
 
 	return cipheredText;
 }
@@ -46,28 +61,30 @@ char * transpositionDecipher(const char * cipheredText, size_t length, int key)
 	if(!cipheredText)
 		return NULL;
 
-	int decipherIndex = 0, blockIndex = 0, newPosition = 0, addValueToDecipherIndex = 0;
-	int i = 0;
-	int j = 0;
-	char newBlock[BLOCK_SIZE];
-	char * plainText = (char *)malloc(sizeof(char) * length);
+	char * plainText = (char *)malloc(sizeof(char) * length + 1);
+	plainText[length] = '\0';
+	int rows = ((int)length / BLOCK_SIZE) + (((int)length % BLOCK_SIZE) ? 1 : 0);
+	char * text = (char *)malloc(rows*BLOCK_SIZE);
+	int *keyColumn;
 
-	for(; decipherIndex < length; decipherIndex+=BLOCK_SIZE)
-	{
-		
-		for(; blockIndex < BLOCK_SIZE; blockIndex++){
-			newPosition = (blockIndex ^ key) % BLOCK_SIZE;
-			newBlock[newPosition] = cipheredText[decipherIndex + blockIndex];			
+	keyColumn = keyColumnGenerator(key);
+	int i = 0,j = 0, pi = 0;
+	for(;i < BLOCK_SIZE; i++){
+		for(;j < rows; j++){
+			pi = j * BLOCK_SIZE + *(keyColumn + i);
+			if( pi < length){
+				plainText[pi] = cipheredText[i * rows + j];
+			}
+			
 		}
-
-		for(; addValueToDecipherIndex < BLOCK_SIZE; addValueToDecipherIndex++){
-			plainText[decipherIndex + addValueToDecipherIndex] = newBlock[addValueToDecipherIndex];
-		}
-
-		blockIndex = 0;
-		addValueToDecipherIndex = 0;
+	 j = 0;
 	}
+	// for (i=length-BLOCK_SIZE; i<length; i++) {
+	// 	printf("I: %i, C: %c\n",i, plainText[i] );
+	// 	if (plainText[i] == '!') {
+	// 		plainText[i] = '\0';
+	// 	}
+	// }
 
-		return plainText;
-	
+	return plainText;
 }
