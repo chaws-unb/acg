@@ -40,7 +40,7 @@ void test_substitutionCipher()
 	printf("Ciphered text is  : %s\n", cipheredText);
 	printf("Deciphered text is: %s\n", decipheredText);
 	printf("Broken text is    : %s\n", analysis);
-	printf("*** End of Test: substitutionCipher() ***\n");
+	printf("*** End of Test: substitutionCipher() ***\n\n");
 }
 
 /**
@@ -52,11 +52,10 @@ void test_transpositionCipher()
 
 	char * cipheredText = transpositionCipher(plainText, length, keyTransposition);
 	char * decipheredText = transpositionDecipher(cipheredText, length, keyTransposition);
-
-	printf("\nPlain text is:      %s\n\n", plainText);
-	printf("Ciphered text is:   %s\n\n", cipheredText);
-	printf("Deciphered text is: %s\n\n", decipheredText);
-	printf("*** End of Test: transpositionCipher() ***\n");
+	printf("\nPlain text is:      %s\n", plainText);
+	printf("Ciphered text is:   %s\n", cipheredText);
+	printf("Deciphered text is: %s\n", decipheredText);
+	printf("*** End of Test: transpositionCipher() ***\n\n");
 }
 
 /**

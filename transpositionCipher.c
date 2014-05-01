@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include <math.h>
 
+#define MAX_COMBINATIONS 8 * 7 * 6 * 5 * 4 * 3 * 2
+#define COMBINATIONS_FILE "combinations.txt"
+
 int * keyColumnGenerator(int key){
 	static int r[8];
 	int i = 0;
@@ -87,4 +90,33 @@ char * transpositionDecipher(const char * cipheredText, size_t length, int key)
 	// }
 
 	return plainText;
+}
+
+char * crackTransposition()
+{
+	static char initTable = 0;
+	static char * table = NULL;
+	if(initTable)
+		return table;
+
+	// Read the combinations from a file
+	FILE * file = fopen(COMBINATIONS_FILE, "r");
+	if(!file)
+	{
+		printf("Combinations file not found!\n");
+		return NULL;
+	}
+
+	table = (char *)malloc(sizeof(char) * MAX_COMBINATIONS * BLOCK_SIZE);
+
+	// Generate the combinationsTable
+	int i, j;
+	for(i = 0; i < MAX_COMBINATIONS; i++, getc(file) /* remove \n */)
+		for(j = 0; j < BLOCK_SIZE; j++)
+			table[i * BLOCK_SIZE + j] = getc(file) - '0'; // from numbers 0 - 7, not character
+
+	initTable = 1;
+	fclose(file);
+
+	return table;
 }

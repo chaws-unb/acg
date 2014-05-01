@@ -217,30 +217,14 @@ static char * substitute(const char * plainText, size_t length, int key, char fo
 
 	int cipherIndex = 0;
 	char * cipheredText = (char *)malloc(sizeof(char) * length);
-	char newChar, oldChar;
+	char oldChar;
 
 	for(; cipherIndex < length; cipherIndex++)
 	{
 		oldChar = plainText[cipherIndex];
-		if(forwardOrBackward)
-		{
-			newChar = tableOfSubstitutionChars[oldChar];
-			//printf("[%c] => %c\n", oldChar, newChar);
-			//printf("(CHAR(new) + key %% ALPHABET_LENGTH = %i\n", abs(CHAR(newChar) + key) % ALPHABET_LENGTH);
-			//cipheredText[cipherIndex] = alphabet[abs((CHAR(newChar) + key) % ALPHABET_LENGTH)];
-			cipheredText[cipherIndex] = newChar;
-			//printf("ciphered %c\n", cipheredText[cipherIndex]);
-		}
-		else
-		{
-			//printf("Received %c\n", oldChar);
-			//printf("(CHAR(oldChar) - key %% ALPHABET_LENGTH = %i\n", abs(CHAR(oldChar) - key) % ALPHABET_LENGTH);
-			//newChar = alphabet[abs((CHAR(oldChar) - key) % ALPHABET_LENGTH)];	
-			//printf("new char %c\n", newChar);
-			//cipheredText[cipherIndex] = tableOfSubstitutionCharsInv[newChar];
-			//printf("Plain %c\n", cipheredText[cipherIndex]);
-			cipheredText[cipherIndex] = tableOfSubstitutionCharsInv[oldChar];
-		}
+		cipheredText[cipherIndex] = (forwardOrBackward ? 
+										tableOfSubstitutionChars[oldChar] :
+										tableOfSubstitutionCharsInv[oldChar]);
 	}
 	return cipheredText;
 }

@@ -31,6 +31,7 @@ char * 	  crackSubstitution(char * cipheredText, size_t length);
  */
 char *   transpositionCipher(const char * plainText, size_t length, int key);
 char * transpositionDecipher(const char * cipheredText, size_t length, int key);
+char *    crackTransposition(); // Actually, generates all possible combinations and return an array with it
 
 /**
  *	Cipher the plain text using a product cipher
@@ -50,5 +51,19 @@ char * cipher(const char * plainText, size_t length, int key);
  *	How: I don't know!
  */
 char * decipher(const char * cipheredText, size_t length, int key);
+
+/**
+ *	Breaker functions:
+ *	Tries to break a ciphered text using brute-force to generate
+ *	positions likely to be correct and send each one to breaker_s
+ */
+char * breaker_bf(char * cipheredText, size_t length);
+
+/**
+ *	Breaker functions:
+ *	Tries to find patterns with words computador and seguranca
+ *	to make guesses about the substitution table
+ */
+char * breaker_s(char * cipheredText, size_t length);
 
 #endif
