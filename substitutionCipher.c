@@ -251,6 +251,9 @@ char * substitutionDecipher(const char * cipheredText, size_t length, int key)
 
 char * getSimilarComputadorWords(const char * cipheredText, size_t length)
 {
+	if(!cipheredText)
+		return NULL;
+
 	char * similarComputadorWords = (char *)malloc(sizeof(char) * length * LENGTH_COMP);
 	int indexSimilarComputadorWords = 0;
 
@@ -319,11 +322,16 @@ char * getSimilarComputadorWords(const char * cipheredText, size_t length)
 			similarComputadorWords[indexSimilarComputadorWords++] = ',';
 		}
 	}
-	return similarComputadorWords;
+	if(indexSimilarComputadorWords)
+		return similarComputadorWords;
+	free(similarComputadorWords);
+	return NULL;
 }
 
 char * getSimilarSegurancaWords(const char * cipheredText, size_t length)
 {
+	if(!cipheredText)
+		return NULL;
 	char * similarSegurancaWords = (char *)malloc(sizeof(char) * length * LENGTH_SEG);
 	int indexSimilarSegurancaWords = 0;
 
@@ -387,7 +395,10 @@ char * getSimilarSegurancaWords(const char * cipheredText, size_t length)
 			similarSegurancaWords[indexSimilarSegurancaWords++] = ',';
 		}
 	}
-	return similarSegurancaWords;
+	if(indexSimilarSegurancaWords)
+		return similarSegurancaWords;
+	free(similarSegurancaWords);
+	return NULL;
 }
 
 /**
@@ -431,7 +442,10 @@ char * validateComputadorVsSeguranca(char * computador, char * seguranca)
 			}
 		}
 	}
-	return matchingWords;
+	if(mw != matchingWords)
+		return matchingWords;
+	free(matchingWords);
+	return NULL;
 }
 
 // Matchingwords = computadorseguranca,computadorseguranca
@@ -478,6 +492,8 @@ void buildInitialCrackAlphabet(char * matchingWords)
 
 char * breakIt(const char * cipheredText, size_t length)
 {
+	if(!cipheredText)
+		return NULL;
 	int i;
 	char * broken = (char *)malloc(sizeof(char) * length);
 	for(i = 0; i < length; i++)
@@ -550,22 +566,44 @@ void printCrackedAlphabet()
 
 char * crackSubstitution(char * cipheredText, size_t length)
 {
+	if(!cipheredText)
+		return NULL;
 	// The logic here is to find pattern that match words
 	// computador and seguranca
 
 	// Get aproximations of the words
 	char * computador = getSimilarComputadorWords(cipheredText, length);
+	if(!computador)
+		return NULL;
+
 	char * seguranca  = getSimilarSegurancaWords(cipheredText, length);
+	if(!seguranca)
+		return NULL;
 
 	// Validate each word with another one
 	// it means computador has some letters that belongs to seguranca
+	if(DEBUG)
+		printf("*** ANALISYS: Found computador %s and seguranca %s, trying match: ", computador, seguranca);
+
 	char * matchingWords = validateComputadorVsSeguranca(computador, seguranca);
+	if(!matchingWords)
+	{
+		if(DEBUG)
+			printf("They don't match =/\n");
+		return NULL;
+	}
+	if(DEBUG)
+		printf("They match =) \n");
 
 	// Build the initial alphabet
 	buildInitialCrackAlphabet(matchingWords);
 
 	// Break it using the cracked alphabet
 	char * broken = breakIt(cipheredText, length);
+	if(!broken)
+		return NULL;
+
+	return broken;
 
 	// Resolve accordingly with portuguese dictionary
 	resolveWords(broken, length);

@@ -36,9 +36,28 @@ char * decipher(const char * cipheredText, size_t length, int key)
 	return productDecipher(cipheredText, length, key);
 }
 
-static char * applyCombination(const char * cipheredText, size_t length, char * combination)
+// Use the current combination to swap chars
+static char * applyCombination(char * cipheredText, size_t length, char * combination)
 {
+	char * plainText = (char *)malloc(sizeof(char) * length + 1);
+	plainText[length] = '\0';
+	int rows = ((int)length / BLOCK_SIZE) + (((int)length % BLOCK_SIZE) ? 1 : 0);
+	char * text = (char *)malloc(rows * BLOCK_SIZE);
 
+	int i = 0, j = 0, pi = 0;
+	for(;i < BLOCK_SIZE; i++)
+	{
+		for(j = 0; j < rows; j++)
+		{
+			pi = j * BLOCK_SIZE + *(combination + i);
+			if(pi < length)
+			{
+				plainText[pi] = cipheredText[i * rows + j];
+			}
+			
+		}
+	}
+	return plainText;
 }
 
 char * breaker_bf(char * cipheredText, size_t length)
@@ -75,6 +94,7 @@ char * breaker_bf(char * cipheredText, size_t length)
 		if(likelyPlain != NULL)
 			return likelyPlain;
 	}
+	return NULL;
 }
 
 char * breaker_s(char * cipheredText, size_t length)
