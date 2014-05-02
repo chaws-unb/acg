@@ -13,7 +13,7 @@ void test_breaker();
 void runAllTests();
 int key = 0x10;
 int keyTransposition = 0xCDF86BDB;
-const char * plainText = "O modo de seguranca e util para solucionar problemas com programas e drivers que talvez nao iniciem corretamente ou que podem impedir que o Windows seja iniciado corretamente Se um problema nao se repetir quando o computador for iniciado no modo de seguranca voce podera eliminar as configuracoes padrao e os drivers de dispositivo basicos como as possiveis causas Se um programa dispositivo ou driver instalado recentemente impedir a execucao correta do Windows voce podera iniciar o computador no modo de seguranca e em seguida remover o programa que esta causando o problema Qualquer usuario independente do tipo de uso do computador pode ser um alvo maravilhoso para os 454785 maliciosos desenvolvedores de pragas virtuais principalmente porque cada equipamento infectado tem a capacidade de infectar uma quantidade absurda de outros computadores sem o conhecimento do proprietario Voce sabia que pode pegar  um virus somente por acessar sites infectados Basta que sua maquina nao esteja protegida devidamente ou que voce esteja utilizando softwares desatualizados Coisa serias";
+const char * plainText = "O modo de seguuranca e util para solucionar problemas com programas e drivers que talvez nao iniciem corretamente ou que podem impedir que o Windows seja iniciado corretamente Se um problema nao se repetir quando o computador for iniciado no modo de seguuranca voce podera eliminar as configuracoes padrao e os drivers de dispositivo basicos como as possiveis causas Se um programa dispositivo ou driver instalado recentemente impedir a execucao correta do Windows voce podera iniciar o computador no modo de seguranca e em seguida remover o programa que esta causando o problema Qualquer usuario independente do tipo de uso do computador pode ser um alvo maravilhoso para os 454785 maliciosos desenvolvedores de pragas virtuais principalmente porque cada equipamento infectado tem a capacidade de infectar uma quantidade absurda de outros computadores sem o conhecimento do proprietario Voce sabia que pode pegar  um virus somente por acessar sites infectados Basta que sua maquina nao esteja protegida devidamente ou que voce esteja utilizando softwares desatualizados Coisa serias";
 size_t length;
 
 /**
@@ -21,9 +21,9 @@ size_t length;
  */
 void runAllTests()
 {
-	//test_substitutionCipher();
-	//test_transpositionCipher();
-	//test_productCipher();
+	test_substitutionCipher();
+	test_transpositionCipher();
+	test_productCipher();
 	test_breaker();
 }
 
@@ -78,16 +78,13 @@ void test_productCipher()
 void test_breaker()
 {
 	char * substitutionCipheredText = substitutionCipher(plainText, length, key);
-	//char * substitutionBroken 		= breaker_s(substitutionCipheredText, length);
 	char * productCipheredText 		= productCipher(plainText, length, key);
 	char * productBroken 			= breaker_bf(productCipheredText, length);
 
 	printf("*** Test: breaker() ***\n");
 	printf("Plain text is:      	%s\n", plainText);
 	printf("Substitution text is:   %s\n", substitutionCipheredText);
-	//printf("Substitution broken is: %s\n", substitutionBroken);
-	printf("Product text is: 		%s\n", productCipheredText);
-	printf("Product broken is: 		%s\n", productBroken);
+	printf("Broken is: 				%s\n", productBroken);
 	printf("*** End of Test: productCipher() ***\n");
 }
 

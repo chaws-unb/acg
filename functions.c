@@ -39,28 +39,25 @@ char * decipher(const char * cipheredText, size_t length, int key)
 // Use the current combination to swap chars
 static char * applyCombination(char * cipheredText, size_t length, char * combination)
 {
-	int blocks = length / BLOCK_SIZE, i, j, position;
-	char * returned 		= malloc(sizeof(char) * length),
-	     * currentCipher   	= NULL,
-	     * currentReturned 	= NULL;
+	char * plainText = (char *)malloc(sizeof(char) * length + 1);
+	plainText[length] = '\0';
+	int rows = ((int)length / BLOCK_SIZE) + (((int)length % BLOCK_SIZE) ? 1 : 0);
+	char * text = (char *)malloc(rows * BLOCK_SIZE);
 
-	for(i = 0; i < blocks; i++)
+	int i = 0, j = 0, pi = 0;
+	for(;i < BLOCK_SIZE; i++)
 	{
-		currentCipher 	= cipheredText + (i * BLOCK_SIZE);
-		currentReturned = returned 	   + (i * BLOCK_SIZE);
-		for(j = 0; j < BLOCK_SIZE; j++)
+		for(j = 0; j < rows; j++)
 		{
-			position = combination[j]; // anything from 0 - 7
-			currentReturned[j] = currentCipher[position];
+			pi = j * BLOCK_SIZE + *(combination + i);
+			if(pi < length)
+			{
+				plainText[pi] = cipheredText[i * rows + j];
+			}
+			
 		}
 	}
-
-	// Just copy the last block
-	blocks = length % BLOCK_SIZE;
-	if(blocks)
-		strncpy(returned, cipheredText, blocks);
-
-	return returned;
+	return plainText;
 }
 
 char * breaker_bf(char * cipheredText, size_t length)
@@ -84,7 +81,6 @@ char * breaker_bf(char * cipheredText, size_t length)
 	// Generate it only once
 	possibleCombinations = crackTransposition();
 
-	printf("Breaking\n"); // return NULL;
 	for(i = 0; i < combinations; i++)
 	{
 		// Copy one combination
@@ -92,14 +88,11 @@ char * breaker_bf(char * cipheredText, size_t length)
 
 		// mix chars
 		textCombined = applyCombination(cipheredText, length, combination);
-		printf("Text combined %s\n", textCombined);
-		break;
 
 		// Test if something comes from this text
-		//likelyPlain = breaker_s(textCombined, length);
-		//if(likelyPlain != NULL)
-			//return likelyPlain;
-		free(likelyPlain);
+		likelyPlain = breaker_s(textCombined, length);
+		if(likelyPlain != NULL)
+			return likelyPlain;
 	}
 	return NULL;
 }
