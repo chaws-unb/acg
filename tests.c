@@ -9,6 +9,7 @@
 void test_substitutionCipher();
 void test_transpositionCipher();
 void test_productCipher();
+void test_breaker();
 void runAllTests();
 int key = 0x10;
 int keyTransposition = 0xCDF86BDB;
@@ -20,9 +21,10 @@ size_t length;
  */
 void runAllTests()
 {
-	test_substitutionCipher();
-	test_transpositionCipher();
-	test_productCipher();
+	//test_substitutionCipher();
+	//test_transpositionCipher();
+	//test_productCipher();
+	test_breaker();
 }
 
 /**
@@ -30,16 +32,13 @@ void runAllTests()
  */
 void test_substitutionCipher()
 {
+	char * cipheredText 	= substitutionCipher(plainText, length, key);
+	char * decipheredText 	= substitutionDecipher(cipheredText, length, key);
+
 	printf("*** Test: substitutionCipher() ***\n");
-
-	char * cipheredText = substitutionCipher(plainText, length, key);
-	char * decipheredText = substitutionDecipher(cipheredText, length, key);
-	char * analysis = crackSubstitution(cipheredText, length);
-
-	printf("\nPlain text is     : %s\n", plainText);
+	printf("Plain text is     : %s\n", plainText);
 	printf("Ciphered text is  : %s\n", cipheredText);
 	printf("Deciphered text is: %s\n", decipheredText);
-	printf("Broken text is    : %s\n", analysis);
 	printf("*** End of Test: substitutionCipher() ***\n\n");
 }
 
@@ -48,11 +47,11 @@ void test_substitutionCipher()
  */
 void test_transpositionCipher()
 {
-	printf("*** Test: transpositionCipher() ***\n");
+	char * cipheredText 	= transpositionCipher(plainText, length, keyTransposition);
+	char * decipheredText 	= transpositionDecipher(cipheredText, length, keyTransposition);
 
-	char * cipheredText = transpositionCipher(plainText, length, keyTransposition);
-	char * decipheredText = transpositionDecipher(cipheredText, length, keyTransposition);
-	printf("\nPlain text is:      %s\n", plainText);
+	printf("*** Test: transpositionCipher() ***\n");
+	printf("Plain text is:      %s\n", plainText);
 	printf("Ciphered text is:   %s\n", cipheredText);
 	printf("Deciphered text is: %s\n", decipheredText);
 	printf("*** End of Test: transpositionCipher() ***\n\n");
@@ -63,14 +62,32 @@ void test_transpositionCipher()
  */
 void test_productCipher()
 {
+	char * cipheredText 	= productCipher(plainText, length, key);
+	char * decipheredText 	= productDecipher(cipheredText, length, key);
+
 	printf("*** Test: productCipher() ***\n");
-
-	char * cipheredText = productCipher(plainText, length, key);
-	char * decipheredText = productDecipher(cipheredText, length, key);
-
-	printf("\nPlain text is:      %s\n", plainText);
+	printf("Plain text is:      %s\n", plainText);
 	printf("Ciphered text is:   %s\n", cipheredText);
 	printf("Deciphered text is: %s\n", decipheredText);
+	printf("*** End of Test: productCipher() ***\n\n");
+}
+
+/**
+ *	Test the breaker
+ */
+void test_breaker()
+{
+	char * substitutionCipheredText = substitutionCipher(plainText, length, key);
+	//char * substitutionBroken 		= breaker_s(substitutionCipheredText, length);
+	char * productCipheredText 		= productCipher(plainText, length, key);
+	char * productBroken 			= breaker_bf(productCipheredText, length);
+
+	printf("*** Test: breaker() ***\n");
+	printf("Plain text is:      	%s\n", plainText);
+	printf("Substitution text is:   %s\n", substitutionCipheredText);
+	//printf("Substitution broken is: %s\n", substitutionBroken);
+	printf("Product text is: 		%s\n", productCipheredText);
+	printf("Product broken is: 		%s\n", productBroken);
 	printf("*** End of Test: productCipher() ***\n");
 }
 

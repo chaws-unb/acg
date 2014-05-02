@@ -36,9 +36,31 @@ char * decipher(const char * cipheredText, size_t length, int key)
 	return productDecipher(cipheredText, length, key);
 }
 
-static char * applyCombination(const char * cipheredText, size_t length, char * combination)
+// Use the current combination to swap chars
+static char * applyCombination(char * cipheredText, size_t length, char * combination)
 {
+	int blocks = length / BLOCK_SIZE, i, j, position;
+	char * returned 		= malloc(sizeof(char) * length),
+	     * currentCipher   	= NULL,
+	     * currentReturned 	= NULL;
 
+	for(i = 0; i < blocks; i++)
+	{
+		currentCipher 	= cipheredText + (i * BLOCK_SIZE);
+		currentReturned = returned 	   + (i * BLOCK_SIZE);
+		for(j = 0; j < BLOCK_SIZE; j++)
+		{
+			position = combination[j]; // anything from 0 - 7
+			currentReturned[j] = currentCipher[position];
+		}
+	}
+
+	// Just copy the last block
+	blocks = length % BLOCK_SIZE;
+	if(blocks)
+		strncpy(returned, cipheredText, blocks);
+
+	return returned;
 }
 
 char * breaker_bf(char * cipheredText, size_t length)
@@ -62,6 +84,7 @@ char * breaker_bf(char * cipheredText, size_t length)
 	// Generate it only once
 	possibleCombinations = crackTransposition();
 
+	printf("Breaking\n"); // return NULL;
 	for(i = 0; i < combinations; i++)
 	{
 		// Copy one combination
@@ -69,12 +92,16 @@ char * breaker_bf(char * cipheredText, size_t length)
 
 		// mix chars
 		textCombined = applyCombination(cipheredText, length, combination);
+		printf("Text combined %s\n", textCombined);
+		break;
 
 		// Test if something comes from this text
-		likelyPlain = breaker_s(textCombined, length);
-		if(likelyPlain != NULL)
-			return likelyPlain;
+		//likelyPlain = breaker_s(textCombined, length);
+		//if(likelyPlain != NULL)
+			//return likelyPlain;
+		free(likelyPlain);
 	}
+	return NULL;
 }
 
 char * breaker_s(char * cipheredText, size_t length)
