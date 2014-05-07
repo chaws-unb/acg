@@ -49,6 +49,9 @@ void test_gcd()
 
 	ZZ bigNumber1, bigNumber2, resultGCD;
 
+	bigNumber1 = to_ZZ(1160718174);
+	bigNumber2 = to_ZZ(316258250);
+
 	resultGCD = rsa.gcd(bigNumber1, bigNumber2);
 
 	cout << "GCD(" << bigNumber1 << ", " << bigNumber2 << ") = " << resultGCD << endl;
