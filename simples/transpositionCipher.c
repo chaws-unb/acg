@@ -50,7 +50,7 @@ char * transpositionCipher(const char * plainText, size_t length, int key)
 	for(;columnIndex < BLOCK_SIZE; columnIndex++){
 		for(;rowsIndex < rows; rowsIndex++){
 			pi = rowsIndex * BLOCK_SIZE + *(keyColumn + columnIndex);
-			cipheredText[columnIndex * rows + rowsIndex] = pi < length ? plainText[pi] : plainText[rowsIndex];
+			cipheredText[columnIndex * rows + rowsIndex] = pi < length ? plainText[pi] : '0';
 		}
 	 rowsIndex = 0;
 	}
@@ -82,6 +82,12 @@ char * transpositionDecipher(const char * cipheredText, size_t length, int key)
 		}
 	 rowsIndex = 0;
 	}
+  int padIndex;
+  for (padIndex=length-BLOCK_SIZE; padIndex < length; padIndex++){
+    if(plainText[padIndex] == '0'){
+      plainText[padIndex] = '\0';
+    }
+  }
 
 	return plainText;
 }
