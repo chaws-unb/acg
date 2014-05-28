@@ -9,6 +9,7 @@ using namespace std;
 void runAllTests();
 void test_getBigPrime();
 void test_gcd();
+void test_xgcd();
 void test_generateCipherKey();
 void test_generateDecipherKey();
 void test_rsaCipher();
@@ -23,6 +24,7 @@ void runAllTests()
 {
 	test_getBigPrime();
 	test_gcd();
+	test_xgcd();
 	test_generateCipherKey();
 	test_generateDecipherKey();
 	test_rsaCipher();
@@ -57,6 +59,23 @@ void test_gcd()
 	cout << "GCD(" << bigNumber1 << ", " << bigNumber2 << ") = " << resultGCD << endl;
 
 	cout << "****** End-Test: gcd() ******" << endl << endl;
+}
+
+void test_xgcd()
+{
+	cout << "****** Test: xgcd() ******" << endl;
+
+	ZZ bigNumber1, bigNumber2, resultXGCD, phi;
+
+	bigNumber1 = to_ZZ(17);
+	bigNumber2 = to_ZZ(11);
+	phi = (bigNumber1-1) * (bigNumber2-1);
+
+	resultXGCD = rsa.xgcd(to_ZZ(7), phi, to_ZZ(1));
+
+	cout << "XGCD(" << bigNumber1 << ", " << bigNumber2 << ") = " << resultXGCD << endl;
+
+	cout << "****** End-Test: xgcd() ******" << endl << endl;
 }
 
 void test_generateCipherKey()

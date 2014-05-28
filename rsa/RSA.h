@@ -31,6 +31,12 @@ public:
 	ZZ gcd(const ZZ& number1, const ZZ& number2);
 
 	/**
+	 *	Return the Extend Euclides of an e number and
+	 *	your Euler totient;
+	 */
+	ZZ xgcd(const ZZ& e, const ZZ& et, const ZZ& x);
+
+	/**
 	* Check to see if a number is a prime
 	**/
 	bool isPrime(const ZZ& n);
@@ -62,3 +68,4 @@ public:
 };
 
 #endif
+
