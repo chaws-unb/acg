@@ -2,8 +2,8 @@
 
 ZZ RSA::gcd(const ZZ& number1, const ZZ& number2)
 {
-	if(DEBUG)
-		cout << "*** DEBUG: gcd()..." << endl;
+	// if(DEBUG)
+	// 	cout << "*** DEBUG: gcd()..." << endl;
 
 	if(number2 == 0)
 		return number1;

@@ -4,6 +4,7 @@
 #include <NTL/ZZ.h>
 #include <string>
 #include <stdlib.h>
+#include <vector>
 
 /**
  *	Required for use of NTL
@@ -29,6 +30,16 @@ public:
 	 */
 	ZZ gcd(const ZZ& number1, const ZZ& number2);
 
+	/**
+	* Check to see if a number is a prime
+	**/
+	bool isPrime(const ZZ& n);
+
+	/**
+	*Totient function
+	**/
+
+	ZZ totient(const ZZ& n);
 	/**
 	 *	Return a random key crafted by the use of 'p' and 'q' from RSA algorithm
 	 */

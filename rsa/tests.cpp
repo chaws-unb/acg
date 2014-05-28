@@ -66,8 +66,11 @@ void test_generateCipherKey()
 	unsigned short numberOfBits = 4;
 	ZZ p, q, cipherKey;
 
-	p 			= rsa.getBigPrime(numberOfBits);
-	q 			= rsa.getBigPrime(numberOfBits);
+	//p 			= rsa.getBigPrime(numberOfBits);
+	p =  to_ZZ(3);
+	
+	//q 			= rsa.getBigPrime(numberOfBits);
+	q =  to_ZZ(5);
 	cipherKey 	= rsa.generateCipherKey(p, q);
 
 	cout << "Number of bits for key generation: " << numberOfBits << endl;
@@ -85,8 +88,11 @@ void test_generateDecipherKey()
 	unsigned short numberOfBits = 4;
 	ZZ p, q, cipherKey, decipherKey;
 
-	p 			= rsa.getBigPrime(numberOfBits);
-	q 			= rsa.getBigPrime(numberOfBits);
+	//p 			= rsa.getBigPrime(numberOfBits);
+	p =  to_ZZ(3);
+	
+	//q 			= rsa.getBigPrime(numberOfBits);
+	q =  to_ZZ(5);
 	cipherKey 	= rsa.generateCipherKey(p, q);
 	decipherKey = rsa.generateDecipherKey(cipherKey, p, q);
 

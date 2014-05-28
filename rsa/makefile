@@ -19,7 +19,7 @@ _DEPS = RSA.h
 DEPS = $(patsubst %,$(INCLUDE_DIR)/%,$(_DEPS))
 
 _OBJ = tests.o main.o RSA_gcd.o RSA_generateCipherKey.o RSA_generateDecipherKey.o \
-			RSA_getBigPrime.o RSA_cipher.o RSA_decipher.o 
+			RSA_getBigPrime.o RSA_cipher.o RSA_decipher.o  RSA_isPrime.o RSA_totient.o
 OBJ = $(patsubst %,$(OBJECT_DIR)/%,$(_OBJ))
 
 testOnly=obj/main.o
@@ -30,6 +30,9 @@ $(OBJECT_DIR)/%.o: %.cpp $(DEPS)
 
 all: $(filter-out $(mainOnly), $(OBJ)) $(LIB_NTL)
 	$(CC) -o $(BIN_DIR)/$(PROGRAM_NAME) $^ $(LIB_NTL) $(CFLAGS)
+
+debug: $(filter-out $(mainOnly), $(OBJ)) $(LIB_NTL)
+	$(CC) -o $(BIN_DIR)/$(PROGRAM_NAME) $^ $(LIB_NTL) $(CFLAGS) -g
 
 tests: $(filter-out $(testOnly), $(OBJ)) $(LIB_NTL)
 	$(CC) -o $(BIN_DIR)/$@ $^ $(CFLAGS) $(LIBS)
