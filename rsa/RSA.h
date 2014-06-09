@@ -7,6 +7,13 @@
 #include <vector>
 
 /**
+ *	Some defines because of ZZ
+ */
+#define ZZ_0 to_ZZ(0)
+#define ZZ_1 to_ZZ(1)
+#define ZZ_2 to_ZZ(2)
+
+/**
  *	Required for use of NTL
  */
 using namespace NTL;
@@ -37,15 +44,16 @@ public:
 	ZZ xgcd(const ZZ& e, const ZZ& et, const ZZ& x);
 
 	/**
-	* Check to see if a number is a prime
-	**/
-	bool isPrime(const ZZ& n);
+	 *	Check to see if a number is a prime
+	 *	t = number of Miller-Rabin tests
+	 */
+	bool isPrime(const ZZ& prime, long t = 10);
 
 	/**
-	*Totient function
-	**/
-
+	 * 	Totient function
+	 */
 	ZZ totient(const ZZ& n);
+
 	/**
 	 *	Return a random key crafted by the use of 'p' and 'q' from RSA algorithm
 	 */

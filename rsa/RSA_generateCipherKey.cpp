@@ -8,16 +8,18 @@ ZZ RSA::generateCipherKey(const ZZ& p, const ZZ& q)
 	ZZ n = p * q;
 
 	ZZ phi = this->totient(n);
-	ZZ cipherKey = to_ZZ(1);
+	ZZ cipherKey = ZZ_1;
     
-	ZZ e = to_ZZ(1);
+	ZZ e = ZZ_1;
 
-	e = (to_ZZ(rand()) % (phi - to_ZZ(1))) + to_ZZ(2);
+	e = (to_ZZ(rand()) % (phi - ZZ_1)) + ZZ_2;
 
 
-	while(this->gcd(e, (phi)) != to_ZZ(1)){
-		e = to_ZZ(rand()) % (phi - to_ZZ(1)) + to_ZZ(2);
+	while(this->gcd(e, (phi)) != ZZ_1)
+	{
+		e = to_ZZ(rand()) % (phi - ZZ_1) + ZZ_2;
 	}
+	
 	cipherKey = e;
 	return cipherKey;
 }

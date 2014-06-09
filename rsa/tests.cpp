@@ -35,12 +35,40 @@ void test_getBigPrime()
 {
 	cout << "****** Test: getBigPrime() ******" << endl;
 
-	unsigned short numberOfBits = 2;
-	ZZ bigPrime;
+	unsigned short numberOfBits = 1000;
+	ZZ bigPrime1;
+	ZZ bigPrime2;
+	ZZ bigPrime3;
+	ZZ bigPrime4;
+	ZZ bigPrime5;
+	ZZ bigPrime6;
+	ZZ bigPrime7;
+	ZZ bigPrime8;
+	ZZ bigPrime9;
+	ZZ bigPrime10;
 
-	bigPrime = rsa.getBigPrime(numberOfBits);
+	bigPrime1 = rsa.getBigPrime(numberOfBits);
+	bigPrime2 = rsa.getBigPrime(numberOfBits);
+	bigPrime3 = rsa.getBigPrime(numberOfBits);
+	bigPrime4 = rsa.getBigPrime(numberOfBits);
+	bigPrime5 = rsa.getBigPrime(numberOfBits);
+	bigPrime6 = rsa.getBigPrime(numberOfBits);
+	bigPrime7 = rsa.getBigPrime(numberOfBits);
+	bigPrime8 = rsa.getBigPrime(numberOfBits);
+	bigPrime9 = rsa.getBigPrime(numberOfBits);
+	bigPrime10 = rsa.getBigPrime(numberOfBits);
 
-	cout << "The big prime for " << numberOfBits << " bits is " << bigPrime << endl;
+	cout << "The big 10 primes for " << numberOfBits << " bits are: " << endl;
+	cout << "1: " << bigPrime1 << endl;
+	cout << "2: " << bigPrime2 << endl;
+	cout << "3: " << bigPrime3 << endl;
+	cout << "4: " << bigPrime4 << endl;
+	cout << "5: " << bigPrime5 << endl;
+	cout << "6: " << bigPrime6 << endl;
+	cout << "7: " << bigPrime7 << endl;
+	cout << "8: " << bigPrime8 << endl;
+	cout << "9: " << bigPrime9 << endl;
+	cout << "10: " << bigPrime10 << endl;
 
 	cout << "****** End-Test: getBigPrime() ******" << endl << endl;
 }
@@ -82,14 +110,13 @@ void test_generateCipherKey()
 {
 	cout << "****** Test: generateCipherKey() ******" << endl;
 
-	unsigned short numberOfBits = 4;
+	unsigned short numberOfBits = 40;
 	ZZ p, q, cipherKey;
 
-	//p 			= rsa.getBigPrime(numberOfBits);
-	p =  to_ZZ(3);
-	
-	//q 			= rsa.getBigPrime(numberOfBits);
-	q =  to_ZZ(5);
+	// p = to_ZZ(3);
+	// q = to_ZZ(5);
+	p = rsa.getBigPrime(numberOfBits);
+	q = rsa.getBigPrime(numberOfBits);
 	cipherKey 	= rsa.generateCipherKey(p, q);
 
 	cout << "Number of bits for key generation: " << numberOfBits << endl;
@@ -104,14 +131,14 @@ void test_generateDecipherKey()
 {
 	cout << "****** Test: generateDecipherKey() ******" << endl;
 
-	unsigned short numberOfBits = 4;
+	unsigned short numberOfBits = 40;
 	ZZ p, q, cipherKey, decipherKey;
 
-	//p 			= rsa.getBigPrime(numberOfBits);
-	p =  to_ZZ(3);
+	// p =  to_ZZ(3);
+	// q =  to_ZZ(5);
+	p = rsa.getBigPrime(numberOfBits);
+	q = rsa.getBigPrime(numberOfBits);
 	
-	//q 			= rsa.getBigPrime(numberOfBits);
-	q =  to_ZZ(5);
 	cipherKey 	= rsa.generateCipherKey(p, q);
 	decipherKey = rsa.generateDecipherKey(cipherKey, p, q);
 
@@ -128,7 +155,7 @@ void test_rsaCipher()
 {
 	cout << "****** Test: rsaCipher() ******" << endl;
 
-	unsigned short numberOfBits = 4;
+	unsigned short numberOfBits = 40;
 	ZZ p, q, cipherKey, modN;
 	string message, ciphered;
 

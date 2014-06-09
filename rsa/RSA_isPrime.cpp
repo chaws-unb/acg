@@ -1,17 +1,68 @@
 #include <RSA.h>
 
-bool RSA::isPrime(const ZZ& n)
+// Miller-Rabin test
+bool MRTest(const ZZ& n, const ZZ& x)
+{
+	ZZ m, y, z;
+	long j, k;
+
+	if(x == 0) 
+		return false;
+
+	// compute m, k such that n-1 = 2^k * m, m odd:
+
+	k = 1;
+	m = n / 2;
+	while(m % 2 == 0) 
+	{
+		k++;
+		m /= 2;
+	}
+
+	z = PowerMod(x, m, n); // z = x^m % n
+	if(z == 1) 
+		return false;
+
+	j = 0;
+	do {
+		y = z;
+		z = (y * y) % n; 
+		j++;
+	} while (j < k && z != 1);
+
+	return z != 1 || y != n - 1;
+}
+
+bool RSA::isPrime(const ZZ& prime, long t)
 {
 
-  long i;
-	
-	for (i=2; i<n; i++)
+  if (prime <= 1) 
+		return false;
+
+	// First, just try out the division by the first 2000 primes
+	// Source: http://www.shoup.net/ntl/doc/tour-ex1.html
+	PrimeSeq primeSequence; 
+	long tempPrime;
+
+	tempPrime = primeSequence.next();
+	while(tempPrime && tempPrime < 2000) 
 	{
-		if (n % i == 0)
-		{
-			return false;
-		}
+		if((prime % tempPrime) == 0) 
+			return prime == tempPrime;
+		tempPrime = primeSequence.next();
 	}
-	
+
+	// Not it's time for real prime testing
+	ZZ x;
+	long i;
+
+	for(i = 0; i < t; i++) 
+	{
+		x = RandomBnd(prime); // random number between 0 and n-1
+
+		if (MRTest(prime, x)) 
+			return false;
+	}
+
 	return true;
 }
