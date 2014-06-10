@@ -62,7 +62,7 @@ public:
 	/**
 	 *	Power of ZZ
 	 */
-	ZZ bigPower(const ZZ& base, const ZZ& bigPow);
+	ZZ bigPower(const ZZ& base, const ZZ& exp, const ZZ& n);
 
 	/**
 	 * 	Totient function
