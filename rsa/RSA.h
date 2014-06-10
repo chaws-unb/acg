@@ -46,7 +46,7 @@ public:
 	 *	Return the Extend Euclides of an e number and
 	 *	your Euler totient;
 	 */
-	ZZ xgcd(const ZZ& e, const ZZ& et, const ZZ& x);
+	ZZ xgcd(const ZZ& e, const ZZ& et, ZZ& x);
 
 	/**
 	 *	Check to see if a number is a prime
@@ -84,12 +84,12 @@ public:
 	/**
 	 *	Cipher 'message' with 'cipherKey' and 'modN'
 	 */
-	string cipher(const string& message, const ZZ& cipherKey, const ZZ& n);
+	vector<ZZ> cipher(const string& message, const ZZ& cipherKey, const ZZ& n);
 
 	/**
 	 *	Cipher 'message' with 'cipherKey' and 'modN'
 	 */
-	string decipher(const string& cipheredMessage, const ZZ& decipherKey, const ZZ& n);
+	string decipher(const vector<ZZ> &cipheredMessage, const ZZ& decipherKey, const ZZ& n);
 };
 
 #endif

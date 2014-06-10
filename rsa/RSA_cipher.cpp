@@ -1,14 +1,21 @@
 #include <RSA.h>
 
-string RSA::cipher(const string& message, const ZZ& cipherKey, const ZZ& n)
+vector<ZZ> RSA::cipher(const string& message, const ZZ& cipherKey, const ZZ& n)
 {
 	if(DEBUG)
 		cout << "*** DEBUG: rsaCipher()..." << endl;
 
 	size_t length = message.length();
 	int i;
+	vector<ZZ> ciphered;
+	ZZ C;
 	for(i = 0; i < length; i++)
-		cout << "[" << message[i] << "] = " << bigPower(conv<ZZ>(message[i]), cipherKey, n) << endl;
+	{
+		C = bigPower(conv<ZZ>(message[i]), cipherKey, n);
+		if(DEBUG)
+			cout << "[" << message[i] << "] = " << C << endl;
+		ciphered.push_back(C);
+	}
 
-	return "";
+	return ciphered;
 }

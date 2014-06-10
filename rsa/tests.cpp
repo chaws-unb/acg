@@ -7,6 +7,7 @@ using namespace std;
  *	Make G++ stop complaining
  */
 void runAllTests();
+void test_simple();
 void test_getBigPrime();
 void test_gcd();
 void test_xgcd();
@@ -15,13 +16,15 @@ void test_generateDecipherKey();
 void test_rsaCipher();
 void test_rsaDecipher();
 
-RSA rsa(500);
+RSA rsa(100);
 
 /**
  *	Please, add the new tests to this method
  */
 void runAllTests()
 {
+	test_simple();
+	return;
 	test_getBigPrime();
 	test_gcd();
 	test_xgcd();
@@ -29,6 +32,36 @@ void runAllTests()
 	test_generateDecipherKey();
 	test_rsaCipher();
 	test_rsaDecipher();
+}
+
+void test_simple()
+{
+	cout << "****** Test: simple() ******" << endl;
+
+	ZZ p, q, cipherKey, decipherKey, n;
+	string message, deciphered;
+	vector<ZZ> ciphered;
+
+	p 			= conv<ZZ>(281);
+	q 			= conv<ZZ>(167);
+	n			= p * q;
+	cipherKey 	= rsa.generateCipherKey(p, q);
+	decipherKey = rsa.generateDecipherKey(cipherKey, p, q);
+	message 	= "This is my cool message with random senseless stuff";
+	ciphered	= rsa.cipher(message, cipherKey, n);
+	deciphered	= rsa.decipher(ciphered, decipherKey, n);
+
+	cout << "Number of bits for key generation: " << rsa.numberOfBits << endl;
+	cout << "p = " 			<< p << endl;
+	cout << "q = " 			<< q << endl;
+	cout << "n = " 			<< n << endl;
+	cout << "cipherKey = " 	<< cipherKey << endl;
+	cout << "decipherKey = "<< decipherKey << endl;
+	cout << "message = " 	<< message << endl;
+	//cout << "ciphered = " 	<< ciphered << endl;
+	//cout << "deciphered = " 	<< deciphered << endl;
+
+	cout << "****** End-Test: simple() ******" << endl << endl;
 }
 
 void test_getBigPrime()
@@ -92,15 +125,16 @@ void test_xgcd()
 {
 	cout << "****** Test: xgcd() ******" << endl;
 
-	ZZ bigNumber1, bigNumber2, resultXGCD, phi;
+	ZZ bigNumber1, bigNumber2, resultXGCD, phi, x;
 
-	bigNumber1 = to_ZZ(17);
-	bigNumber2 = to_ZZ(11);
+	bigNumber1 = to_ZZ(1160718174);
+	bigNumber2 = to_ZZ(316258250);
 	phi = (bigNumber1 - 1) * (bigNumber2 - 1);
 
-	resultXGCD = rsa.xgcd(to_ZZ(7), phi, to_ZZ(1));
+	resultXGCD = rsa.xgcd(bigNumber1, bigNumber2, x);
 
 	cout << "XGCD(" << bigNumber1 << ", " << bigNumber2 << ") = " << resultXGCD << endl;
+	cout << "X = " << x << endl;
 
 	cout << "****** End-Test: xgcd() ******" << endl << endl;
 }
@@ -151,7 +185,8 @@ void test_rsaCipher()
 	cout << "****** Test: rsaCipher() ******" << endl;
 
 	ZZ p, q, cipherKey, n;
-	string message, ciphered;
+	string message;
+	vector<ZZ> ciphered;
 
 	p = rsa.getBigPrime();
 	q = rsa.getBigPrime();
@@ -166,7 +201,7 @@ void test_rsaCipher()
 	cout << "n = " 			<< n << endl;
 	cout << "cipherKey = " 	<< cipherKey << endl;
 	cout << "message = " 	<< message << endl;
-	cout << "ciphered = " 	<< ciphered << endl;
+	//cout << "ciphered = " 	<< ciphered << endl;
 
 	cout << "****** End-Test: rsaCipher() ******" << endl << endl;
 }
@@ -176,7 +211,8 @@ void test_rsaDecipher()
 	cout << "****** Test: rsaDecipher() ******" << endl;
 
 	ZZ p, q, cipherKey, decipherKey, n;
-	string message, ciphered, deciphered;
+	string message, deciphered;
+	vector<ZZ> ciphered;
 
 	p 			= rsa.getBigPrime();
 	q 			= rsa.getBigPrime();
@@ -194,12 +230,11 @@ void test_rsaDecipher()
 	cout << "cipherKey = " 	<< cipherKey << endl;
 	cout << "decipherKey = "<< decipherKey << endl;
 	cout << "message = " 	<< message << endl;
-	cout << "ciphered = " 	<< ciphered << endl;
-	cout << "deciphered = " 	<< deciphered << endl;
+	//cout << "ciphered = " 	<< ciphered << endl;
+	//cout << "deciphered = " 	<< deciphered << endl;
 
 	cout << "****** End-Test: rsaDecipher() ******" << endl << endl;
 }
-
 
 int main()
 {

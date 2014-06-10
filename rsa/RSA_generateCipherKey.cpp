@@ -6,18 +6,12 @@ ZZ RSA::generateCipherKey(const ZZ& p, const ZZ& q)
 		cout << "*** DEBUG: generateCipherKey()..." << endl;
 
 	ZZ phi = totient(p, q);
-	ZZ cipherKey = ZZ_1;
-    
-	ZZ e = ZZ_1;
+	ZZ e;
 
-	e = (to_ZZ(rand()) % (phi - ZZ_1)) + ZZ_2;
-
+	e = (bigRandom(phi, ZZ_1) % (phi - ZZ_1)) + ZZ_2;
 
 	while(gcd(e, phi) != ZZ_1)
-	{
-		e = to_ZZ(rand()) % (phi - ZZ_1) + ZZ_2;
-	}
+		e = (bigRandom(phi, ZZ_1) % (phi - ZZ_1)) + ZZ_2;
 	
-	cipherKey = e;
-	return cipherKey;
+	return e;
 }

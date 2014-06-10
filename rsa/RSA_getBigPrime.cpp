@@ -21,10 +21,9 @@ ZZ RSA::getBigPrime(unsigned short numberOfBits)
 
 	if(DEBUG)
 		cout << "*** DEBUG: Big random number is " << prime << endl;
-
-	ZZ two = ZZ_2;
-	while(prime > two && !isPrime(prime))
-		prime -= two;
+	
+	while(prime > ZZ_2 && !isPrime(prime))
+		prime -= ZZ_2;
 
 	return prime;
 }

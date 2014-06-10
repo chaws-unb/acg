@@ -20,6 +20,7 @@ bool MRTest(const ZZ& n, const ZZ& x)
 	}
 
 	z = PowerMod(x, m, n); // z = x^m % n
+	//z = bigPower(x, m, n); // z = x^m % n AQUIIIIIIIIIIIII
 	if(z == 1) 
 		return false;
 

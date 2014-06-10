@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	RSA rsa;
+	RSA rsa(10);
 	string output, input;
 	ZZ key;
 
