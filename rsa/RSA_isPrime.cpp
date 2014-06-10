@@ -24,7 +24,8 @@ bool MRTest(const ZZ& n, const ZZ& x)
 		return false;
 
 	j = 0;
-	do {
+	do 
+	{
 		y = z;
 		z = (y * y) % n; 
 		j++;
@@ -58,7 +59,7 @@ bool RSA::isPrime(const ZZ& prime, long t)
 
 	for(i = 0; i < t; i++) 
 	{
-		x = RandomBnd(prime); // random number between 0 and n-1
+		x = bigRandom(prime, ZZ_0); // random number between 0 and n-1
 
 		if (MRTest(prime, x)) 
 			return false;

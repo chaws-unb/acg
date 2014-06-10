@@ -18,8 +18,9 @@ CFLAGS=-I$(INCLUDE_DIR) -I$(INCLUDE_NTL)
 _DEPS = RSA.h
 DEPS = $(patsubst %,$(INCLUDE_DIR)/%,$(_DEPS))
 
-_OBJ = tests.o main.o RSA_gcd.o RSA_xgcd.o RSA_generateCipherKey.o RSA_generateDecipherKey.o \
-			RSA_getBigPrime.o RSA_cipher.o RSA_decipher.o  RSA_isPrime.o RSA_totient.o
+_OBJ = tests.o main.o RSA.o RSA_gcd.o RSA_xgcd.o RSA_generateCipherKey.o RSA_generateDecipherKey.o \
+			RSA_getBigPrime.o RSA_cipher.o RSA_decipher.o RSA_isPrime.o RSA_totient.o RSA_bigRandom.o \
+			RSA_bigPower.o
 OBJ = $(patsubst %,$(OBJECT_DIR)/%,$(_OBJ))
 
 testOnly=obj/main.o

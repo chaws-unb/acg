@@ -4,10 +4,8 @@ ZZ RSA::generateCipherKey(const ZZ& p, const ZZ& q)
 {
 	if(DEBUG)
 		cout << "*** DEBUG: generateCipherKey()..." << endl;
-	
-	ZZ n = p * q;
 
-	ZZ phi = this->totient(n);
+	ZZ phi = totient(p, q);
 	ZZ cipherKey = ZZ_1;
     
 	ZZ e = ZZ_1;
@@ -15,7 +13,7 @@ ZZ RSA::generateCipherKey(const ZZ& p, const ZZ& q)
 	e = (to_ZZ(rand()) % (phi - ZZ_1)) + ZZ_2;
 
 
-	while(this->gcd(e, (phi)) != ZZ_1)
+	while(gcd(e, phi) != ZZ_1)
 	{
 		e = to_ZZ(rand()) % (phi - ZZ_1) + ZZ_2;
 	}

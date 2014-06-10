@@ -26,11 +26,16 @@ class RSA
 {
 
 public:
+	/**
+	 *	Number of working bits for numbers in this RSA workspace
+	 */
+	unsigned short numberOfBits;
+	RSA(unsigned short numberOfBits);
 
 	/**
 	 *	Return a [very big] prime of the 'numberOfBits' bits
 	 */
-	ZZ getBigPrime(unsigned short numberOfBits);
+	ZZ getBigPrime(unsigned short numberOfBits = 0);
 
 	/**
 	 *	Return GCD (MDC in pt-BR) of two [very big] numbers
@@ -50,9 +55,21 @@ public:
 	bool isPrime(const ZZ& prime, long t = 10);
 
 	/**
-	 * 	Totient function
+	 *	Generates big random number
 	 */
-	ZZ totient(const ZZ& n);
+	ZZ bigRandom(const ZZ& n, const ZZ& seed, unsigned short numberOfBits = 0);
+
+	/**
+	 *	Power of ZZ
+	 */
+	ZZ bigPower(const ZZ& base, const ZZ& bigPow);
+
+	/**
+	 * 	Totient function
+	 *	If q is passed, n is considered to be p
+	 *	otherwise, n is considered to be p*q
+	 */
+	ZZ totient(const ZZ& n, const ZZ& q = ZZ_0);
 
 	/**
 	 *	Return a random key crafted by the use of 'p' and 'q' from RSA algorithm
@@ -67,12 +84,12 @@ public:
 	/**
 	 *	Cipher 'message' with 'cipherKey' and 'modN'
 	 */
-	string cipher(const string& message, const ZZ& cipherKey, const ZZ& modN = to_ZZ(1));
+	string cipher(const string& message, const ZZ& cipherKey, const ZZ& n);
 
 	/**
 	 *	Cipher 'message' with 'cipherKey' and 'modN'
 	 */
-	string decipher(const string& cipheredMessage, const ZZ& decipherKey, const ZZ& modN = to_ZZ(1));
+	string decipher(const string& cipheredMessage, const ZZ& decipherKey, const ZZ& n);
 };
 
 #endif
