@@ -1,6 +1,25 @@
 #include <RSA.h>
 #include <iostream>
 
+
+/**
+	***** Values for RSA *****
+
+ok	Pick primes: try to generate primes with 150 digits
+		- generate p and q
+ok	Calculare n and phi(n):
+		- n = p * q
+		- phi(n) = (p - 1) * (q - 1)
+	Choose e:  random value between 2 and phi(n)
+	Find d: d*e = 1 mod(phi(n))
+
+	***** Encoding *****
+	c = m ** e (mod n)
+
+	***** Decoding *****
+	m = c ** d (mod n)
+ */
+
 using namespace std;
 
 /**
@@ -16,7 +35,7 @@ void test_generateDecipherKey();
 void test_rsaCipher();
 void test_rsaDecipher();
 
-RSA rsa(100);
+RSA rsa(10);
 
 /**
  *	Please, add the new tests to this method
@@ -24,7 +43,7 @@ RSA rsa(100);
 void runAllTests()
 {
 	test_simple();
-	return;
+	// / *
 	test_getBigPrime();
 	test_gcd();
 	test_xgcd();
@@ -32,34 +51,39 @@ void runAllTests()
 	test_generateDecipherKey();
 	test_rsaCipher();
 	test_rsaDecipher();
+	// */
 }
 
 void test_simple()
 {
 	cout << "****** Test: simple() ******" << endl;
 
-	ZZ p, q, cipherKey, decipherKey, n;
+	ZZ p, q, e, d, n, phi;
 	string message, deciphered;
 	vector<ZZ> ciphered;
 
 	p 			= conv<ZZ>(281);
 	q 			= conv<ZZ>(167);
 	n			= p * q;
-	cipherKey 	= rsa.generateCipherKey(p, q);
-	decipherKey = rsa.generateDecipherKey(cipherKey, p, q);
-	message 	= "This is my cool message with random senseless stuff";
-	ciphered	= rsa.cipher(message, cipherKey, n);
-	deciphered	= rsa.decipher(ciphered, decipherKey, n);
+	phi			= rsa.totient(p, q);
+	e 			= conv<ZZ>(39423);
+	d 			= conv<ZZ>(26767);
+	message 	= "NO WAY";
+
+	ciphered	= rsa.cipher(message, e, n);
+	deciphered	= rsa.decipher(ciphered, d, n);
 
 	cout << "Number of bits for key generation: " << rsa.numberOfBits << endl;
 	cout << "p = " 			<< p << endl;
 	cout << "q = " 			<< q << endl;
 	cout << "n = " 			<< n << endl;
-	cout << "cipherKey = " 	<< cipherKey << endl;
-	cout << "decipherKey = "<< decipherKey << endl;
+	cout << "phi = " 			<< phi << endl;
+	cout << "cipherKey = " 	<< e << endl;
+	cout << "decipherKey = "<< d << endl;
 	cout << "message = " 	<< message << endl;
-	//cout << "ciphered = " 	<< ciphered << endl;
-	//cout << "deciphered = " 	<< deciphered << endl;
+	cout << "ciphered = ";
+	for(int i = 0; i < ciphered.size(); i++)
+		cout <<"\t["<< i <<"]"<< ciphered[i] << ", " << endl;
 
 	cout << "****** End-Test: simple() ******" << endl << endl;
 }

@@ -13,9 +13,10 @@ string RSA::decipher(const vector<ZZ> &cipheredMessage, const ZZ& decipherKey, c
 	{
 		M = bigPower(cipheredMessage[i], decipherKey, n);
 		if(DEBUG)
-			cout << "[" << cipheredMessage[i] << "] = " << M << endl;
-		//message.push_back(M);
+			;//cout << "[" << cipheredMessage[i] << "] = " << M << endl;
+
+		message.push_back((char)trunc_long(M, 8));
 	}
-	
+
 	return message;
 }

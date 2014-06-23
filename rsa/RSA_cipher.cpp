@@ -13,7 +13,7 @@ vector<ZZ> RSA::cipher(const string& message, const ZZ& cipherKey, const ZZ& n)
 	{
 		C = bigPower(conv<ZZ>(message[i]), cipherKey, n);
 		if(DEBUG)
-			cout << "[" << message[i] << "] = " << C << endl;
+			;//cout << "[" << message[i] << "] = " << C << endl;
 		ciphered.push_back(C);
 	}
 
