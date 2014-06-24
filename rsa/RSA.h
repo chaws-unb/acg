@@ -5,6 +5,7 @@
 #include <string>
 #include <stdlib.h>
 #include <vector>
+#include <iostream>
 
 /**
  *	Some defines because of ZZ

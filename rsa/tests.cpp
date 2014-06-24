@@ -14,10 +14,10 @@ ok	Calculare n and phi(n):
 	Find d: d*e = 1 mod(phi(n))
 
 	***** Encoding *****
-	c = m ** e (mod n)
+ok	c = m ** e (mod n)
 
 	***** Decoding *****
-	m = c ** d (mod n)
+ok	m = c ** d (mod n)
  */
 
 using namespace std;
@@ -35,7 +35,7 @@ void test_generateDecipherKey();
 void test_rsaCipher();
 void test_rsaDecipher();
 
-RSA rsa(10);
+RSA rsa(20);
 
 /**
  *	Please, add the new tests to this method
@@ -43,24 +43,24 @@ RSA rsa(10);
 void runAllTests()
 {
 	test_simple();
-	// / *
 	test_getBigPrime();
+	/*
 	test_gcd();
 	test_xgcd();
 	test_generateCipherKey();
 	test_generateDecipherKey();
 	test_rsaCipher();
 	test_rsaDecipher();
-	// */
+	*/
 }
 
 void test_simple()
 {
 	cout << "****** Test: simple() ******" << endl;
 
-	ZZ p, q, e, d, n, phi;
-	string message, deciphered;
-	vector<ZZ> ciphered;
+	ZZ p, q, e, d, n, phi, e_generated, d_generated, p_generated, q_generated;
+	string message, deciphered, deciphered_generated;
+	vector<ZZ> ciphered, ciphered_generated;
 
 	p 			= conv<ZZ>(281);
 	q 			= conv<ZZ>(167);
@@ -68,10 +68,18 @@ void test_simple()
 	phi			= rsa.totient(p, q);
 	e 			= conv<ZZ>(39423);
 	d 			= conv<ZZ>(26767);
-	message 	= "NO WAY";
 
+	// Generate both keys
+	p_generated = rsa.getBigPrime();
+	q_generated = rsa.getBigPrime();
+	e_generated = rsa.generateCipherKey(p_generated, q_generated);
+	d_generated = rsa.generateDecipherKey(e_generated, p_generated, q_generated);
+
+	message 	= "NO WAY";
 	ciphered	= rsa.cipher(message, e, n);
 	deciphered	= rsa.decipher(ciphered, d, n);
+	ciphered_generated 	 = rsa.cipher(message, e_generated, n);
+	deciphered_generated = rsa.decipher(ciphered_generated, d_generated, n);
 
 	cout << "Number of bits for key generation: " << rsa.numberOfBits << endl;
 	cout << "p = " 			<< p << endl;
@@ -80,10 +88,19 @@ void test_simple()
 	cout << "phi = " 			<< phi << endl;
 	cout << "cipherKey = " 	<< e << endl;
 	cout << "decipherKey = "<< d << endl;
+	cout << "generated cipherKey = " 	<< e_generated << endl;
+	cout << "generated decipherKey = "<< d_generated << endl;
 	cout << "message = " 	<< message << endl;
+
 	cout << "ciphered = ";
 	for(int i = 0; i < ciphered.size(); i++)
 		cout <<"\t["<< i <<"]"<< ciphered[i] << ", " << endl;
+	cout << "generated ciphered = ";
+	for(int i = 0; i < ciphered_generated.size(); i++)
+		cout <<"\t["<< i <<"]"<< ciphered_generated[i] << ", " << endl;
+
+	cout << "deciphered = " << deciphered << endl;
+	cout << "generated deciphered = " << deciphered_generated << endl;
 
 	cout << "****** End-Test: simple() ******" << endl << endl;
 }
