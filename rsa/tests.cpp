@@ -2,8 +2,7 @@
 #include <iostream>
 
 
-/**
-	***** Values for RSA *****
+/** ***** Values for RSA *****
 
 ok	Pick primes: try to generate primes with 150 digits
 		- generate p and q
@@ -27,38 +26,47 @@ using namespace std;
  */
 void runAllTests();
 void test_simple();
+void test_random();
 void test_getBigPrime();
 void test_gcd();
-void test_xgcd();
 void test_generateCipherKey();
 void test_generateDecipherKey();
 void test_rsaCipher();
 void test_rsaDecipher();
 
-RSA rsa(20);
+RSA rsa(400);
 
 /**
  *	Please, add the new tests to this method
  */
 void runAllTests()
 {
-	test_simple();
-	test_getBigPrime();
 	/*
+	test_simple();
 	test_gcd();
-	test_xgcd();
+	test_getBigPrime();
+	test_random();
 	test_generateCipherKey();
 	test_generateDecipherKey();
 	test_rsaCipher();
-	test_rsaDecipher();
 	*/
+	test_rsaDecipher();
+}
+
+void test_random()
+{
+	cout << "****** Test: random() ******" << endl;
+	ZZ randomNumber = rsa.bigRandom();
+	cout << "RandomNumber: " << randomNumber << endl;
+	cout << "****** End-Test: random() ******" << endl << endl;
 }
 
 void test_simple()
 {
 	cout << "****** Test: simple() ******" << endl;
 
-	ZZ p, q, e, d, n, phi, e_generated, d_generated, p_generated, q_generated;
+	ZZ p, q, e, d, n, phi, 
+	e_generated, d_generated, p_generated, q_generated, phi_generated, n_generated;
 	string message, deciphered, deciphered_generated;
 	vector<ZZ> ciphered, ciphered_generated;
 
@@ -72,20 +80,25 @@ void test_simple()
 	// Generate both keys
 	p_generated = rsa.getBigPrime();
 	q_generated = rsa.getBigPrime();
+	n_generated = p_generated * q_generated;
+	phi_generated = rsa.totient(p_generated, q_generated);
 	e_generated = rsa.generateCipherKey(p_generated, q_generated);
 	d_generated = rsa.generateDecipherKey(e_generated, p_generated, q_generated);
 
-	message 	= "NO WAY";
+	message 	= "NO WAY that this code is working nowww!!! yeeah";
 	ciphered	= rsa.cipher(message, e, n);
 	deciphered	= rsa.decipher(ciphered, d, n);
-	ciphered_generated 	 = rsa.cipher(message, e_generated, n);
-	deciphered_generated = rsa.decipher(ciphered_generated, d_generated, n);
+	ciphered_generated 	 = rsa.cipher(message, e_generated, n_generated);
+	deciphered_generated = rsa.decipher(ciphered_generated, d_generated, n_generated);
 
 	cout << "Number of bits for key generation: " << rsa.numberOfBits << endl;
 	cout << "p = " 			<< p << endl;
 	cout << "q = " 			<< q << endl;
 	cout << "n = " 			<< n << endl;
-	cout << "phi = " 			<< phi << endl;
+	cout << "phi = " 		<< phi << endl;
+	cout << "p_generated = " << p_generated << endl;
+	cout << "q_generated = " << q_generated << endl;
+	cout << "phi_generated = " << phi_generated << endl;
 	cout << "cipherKey = " 	<< e << endl;
 	cout << "decipherKey = "<< d << endl;
 	cout << "generated cipherKey = " 	<< e_generated << endl;
@@ -160,24 +173,6 @@ void test_gcd()
 	cout << "GCD(" << bigNumber1 << ", " << bigNumber2 << ") = " << resultGCD << endl;
 
 	cout << "****** End-Test: gcd() ******" << endl << endl;
-}
-
-void test_xgcd()
-{
-	cout << "****** Test: xgcd() ******" << endl;
-
-	ZZ bigNumber1, bigNumber2, resultXGCD, phi, x;
-
-	bigNumber1 = to_ZZ(1160718174);
-	bigNumber2 = to_ZZ(316258250);
-	phi = (bigNumber1 - 1) * (bigNumber2 - 1);
-
-	resultXGCD = rsa.xgcd(bigNumber1, bigNumber2, x);
-
-	cout << "XGCD(" << bigNumber1 << ", " << bigNumber2 << ") = " << resultXGCD << endl;
-	cout << "X = " << x << endl;
-
-	cout << "****** End-Test: xgcd() ******" << endl << endl;
 }
 
 void test_generateCipherKey()
@@ -272,7 +267,7 @@ void test_rsaDecipher()
 	cout << "decipherKey = "<< decipherKey << endl;
 	cout << "message = " 	<< message << endl;
 	//cout << "ciphered = " 	<< ciphered << endl;
-	//cout << "deciphered = " 	<< deciphered << endl;
+	cout << "deciphered = " 	<< deciphered << endl;
 
 	cout << "****** End-Test: rsaDecipher() ******" << endl << endl;
 }

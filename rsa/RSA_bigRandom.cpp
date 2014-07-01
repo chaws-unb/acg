@@ -1,41 +1,29 @@
 #include <RSA.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
-ZZ RSA::bigRandom(const ZZ& n, const ZZ& seed, unsigned short numberOfBits)
+ZZ RSA::bigRandom(unsigned short numberOfBits)
 {
-	//return RandomBnd(n);
-	if(!numberOfBits)
+	if(numberOfBits == 0)
 		numberOfBits = this->numberOfBits;
 
 	// Create a big number with 'numberOfBits' bits
 	ZZ returned = ZZ_1 << numberOfBits;
 
-	unsigned char t;
-
-	int i;
-
-	for(i = 0; (i + 8) < numberOfBits;)
+	char buffer[4];
+	int value = 0;
+	for(int i = 0; i < numberOfBits; i++)
 	{
-		t = rand() % 255;
-		cout << "t = " << (int)t << endl;
-		t += 2;
+		FILE * output = popen("free | grep 'cache:' | sed 's/.*\\([0-9][0-9][0-9][0-9]\\)$/\\1/'", "r");
+		if(fgets(buffer, 4, output) != NULL)
+			memcpy(&value, buffer, 4);
+		else
+			value = 124354645;
+	    pclose(output);
 
-		// Set the bits
-		if(t & 1)   SetBit(returned, i++);
-		if(t & 2)   SetBit(returned, i++);
-		if(t & 4)   SetBit(returned, i++);
-		if(t & 8)   SetBit(returned, i++);
-		if(t & 16)  SetBit(returned, i++);
-		if(t & 32)  SetBit(returned, i++);
-		if(t & 64)  SetBit(returned, i++);
-		if(t & 128) SetBit(returned, i++);
-	}
-
-	// Continue setting until numberOfBits
-	for(; i < numberOfBits; i++)
-	{
-		t = rand() % 2;
-		if(t) SetBit(returned, i);
+		if(value & 1)
+			SetBit(returned, i);
 	}
 
 	return returned;

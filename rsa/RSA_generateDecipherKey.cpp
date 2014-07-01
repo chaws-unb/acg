@@ -6,7 +6,5 @@ ZZ RSA::generateDecipherKey(const ZZ& cipherKey, const ZZ& p, const ZZ& q)
 		cout << "*** DEBUG: generateDecipherKey()..." << endl;
 
 	ZZ phi = totient(p, q);
-	ZZ d;
-	xgcd(cipherKey, phi, d);
-	return d;
+	return xgcd(cipherKey, phi);
 }

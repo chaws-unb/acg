@@ -1,7 +1,7 @@
 #include <RSA.h>
 
 // Miller-Rabin test
-bool MRTest(const ZZ& n, const ZZ& x)
+bool RSA::MRTest(const ZZ& n, const ZZ& x)
 {
 	ZZ m, y, z;
 	long j, k;
@@ -19,8 +19,8 @@ bool MRTest(const ZZ& n, const ZZ& x)
 		m /= 2;
 	}
 
-	z = PowerMod(x, m, n); // z = x^m % n
-	//z = bigPower(x, m, n); // z = x^m % n AQUIIIIIIIIIIIII
+	//z = PowerMod(x, m, n); // z = x^m % n
+	z = bigPower(x, m, n); // z = x^m % n AQUIIIIIIIIIIIII
 	if(z == 1) 
 		return false;
 
@@ -60,7 +60,7 @@ bool RSA::isPrime(const ZZ& prime, long t)
 
 	for(i = 0; i < t; i++) 
 	{
-		x = bigRandom(prime, ZZ_0); // random number between 0 and n-1
+		x = bigRandom(this->numberOfBits / 4); // random number between 0 and n-1
 
 		if (MRTest(prime, x)) 
 			return false;

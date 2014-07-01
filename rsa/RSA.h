@@ -47,7 +47,7 @@ public:
 	 *	Return the Extend Euclides of an e number and
 	 *	your Euler totient;
 	 */
-	ZZ xgcd(const ZZ& e, const ZZ& et, ZZ& x);
+	ZZ xgcd(const ZZ& e, const ZZ& phi);
 
 	/**
 	 *	Check to see if a number is a prime
@@ -56,9 +56,14 @@ public:
 	bool isPrime(const ZZ& prime, long t = 10);
 
 	/**
+	 *	Performs Miller-rabin test
+	 */
+	bool MRTest(const ZZ& n, const ZZ& x);
+
+	/**
 	 *	Generates big random number
 	 */
-	ZZ bigRandom(const ZZ& n, const ZZ& seed, unsigned short numberOfBits = 0);
+	ZZ bigRandom(unsigned short numberOfBits = 0);
 
 	/**
 	 *	Power of ZZ

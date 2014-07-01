@@ -12,8 +12,6 @@ vector<ZZ> RSA::cipher(const string& message, const ZZ& cipherKey, const ZZ& n)
 	for(i = 0; i < length; i++)
 	{
 		C = bigPower(conv<ZZ>(message[i]), cipherKey, n);
-		if(DEBUG)
-			;//cout << "[" << message[i] << "] = " << C << endl;
 		ciphered.push_back(C);
 	}
 
