@@ -32,6 +32,27 @@ string RSA::convertNumeric(const string& message, int blockSize)
 	while((ss.str().length())%blockSize != 0)
 		ss << '0';
 
+	string numeric = ss.str();
+	cout << "[" << numeric << "]" << endl;
+	cout << "Block size: " << blockSize << endl;
+	cout << "string size: " << numeric.length() << endl;
+
+	return numeric;
+}
+
+string RSA::convertString(const string& message)
+{
+	size_t length = message.length();
+	int i;
+	char number;
+
+	stringstream ss;
+
+	for(i=0; i<length ; i+=3)
+	{
+		number = 100*message[i] + 10*message[i+1] + message[i+2];
+		ss << number;
+	}
 	return ss.str();
 }
 
@@ -44,6 +65,22 @@ ZZ RSA::s_to_ZZ(string str)
 		value += to_ZZ(str[i]);
 	}
 	return value;
+}
+
+
+string RSA::ZZ_to_s(ZZ n)
+{
+	stringstream ss;
+	int digit;
+	while (n>0)
+	{
+		digit = to_int(n%10);
+		n /= 10;
+		ss << digit;
+	}
+	string inverted = ss.str();
+	string result(inverted.rbegin(),inverted.rend());
+	return result;
 }
 
 

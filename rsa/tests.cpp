@@ -42,16 +42,16 @@ RSA rsa(20);
  */
 void runAllTests()
 {
-	test_simple();
 	/*
+	test_simple();
 	test_getBigPrime();
 	test_gcd();
 	test_xgcd();
 	test_generateCipherKey();
 	test_generateDecipherKey();
 	test_rsaCipher();
-	test_rsaDecipher();
 	*/
+	test_rsaDecipher();
 }
 
 void test_simple()

@@ -1,29 +1,32 @@
 #include <RSA.h>
 
+#include <sstream>
+
+using namespace std;
+
 string RSA::decipher(const vector<ZZ> &cipheredMessage, const ZZ& decipherKey, const ZZ& n)
 {
-//	RSA rsa(20);
-//	if(DEBUG)
-//		cout << "*** DEBUG: rsaDecipher()..." << endl;
-//
-//	size_t length = cipheredMessage.length();
-//	int blockSize = calcBlockSize(n);
-//
-//
-//
-//
-//	length = cipheredMessage.size();
-//	string message;
-//	int i;
-//	ZZ M;
-//	for(i = 0; i < length; i++)
-//	{
-//		M = rsa.bigPower(to_ZZ(cipheredMessage[i]), decipherKey, n);
-//		if(DEBUG)
-//			;//cout << "[" << cipheredMessage[i] << "] = " << M << endl;
-//
-//		message.push_back((char)trunc_long(M, 8));
-//	}
-//
-//	return message;
+	RSA rsa(20);
+	if(DEBUG)
+		cout << "*** DEBUG: rsaDecipher()..." << endl;
+
+
+	stringstream numericSS;
+	string message;
+	int i,size;
+	int blockSize = rsa.calcBlockSize(n);
+	ZZ block;
+	string stringBlock;
+	for(i=0,size=int(cipheredMessage.size()) ; i < n ; i++)
+	{
+		block = rsa.bigPower(cipheredMessage[i],decipherKey,n);
+		stringBlock = ZZ_to_s(block);
+		numericSS << stringBlock;
+
+		if(DEBUG)
+			cout << "{" << stringBlock << "}" << endl;
+
+	}
+
+	return rsa.convertString(numericSS.str());
 }

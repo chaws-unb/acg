@@ -96,7 +96,11 @@ public:
 
 	string convertNumeric(const string& message, int blockSize);
 
+	string convertString(const string& message);
+
 	ZZ s_to_ZZ(string str);
+
+	string ZZ_to_s(ZZ n);
 };
 
 #endif
