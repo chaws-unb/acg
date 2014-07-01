@@ -43,8 +43,8 @@ RSA rsa(20);
 void runAllTests()
 {
 	test_simple();
-	test_getBigPrime();
 	/*
+	test_getBigPrime();
 	test_gcd();
 	test_xgcd();
 	test_generateCipherKey();
@@ -57,17 +57,26 @@ void runAllTests()
 void test_simple()
 {
 	cout << "****** Test: simple() ******" << endl;
+	/*
+	 * p = 7669
+	 * q = 10711
+	 * n = 82142659
+	 * phi = 82124280
+	 * k = 1806734161 (e*d)
+	 * e = 47
+	 * d = 48830653
+	 */
 
 	ZZ p, q, e, d, n, phi, e_generated, d_generated, p_generated, q_generated;
 	string message, deciphered, deciphered_generated;
 	vector<ZZ> ciphered, ciphered_generated;
 
-	p 			= conv<ZZ>(281);
-	q 			= conv<ZZ>(167);
+	p 			= conv<ZZ>(7669);
+	q 			= conv<ZZ>(10711);
 	n			= p * q;
 	phi			= rsa.totient(p, q);
-	e 			= conv<ZZ>(39423);
-	d 			= conv<ZZ>(26767);
+	e 			= conv<ZZ>(37);
+	d 			= conv<ZZ>(48830653);
 
 	// Generate both keys
 	p_generated = rsa.getBigPrime();
@@ -229,10 +238,11 @@ void test_rsaCipher()
 	string message;
 	vector<ZZ> ciphered;
 
-	p = rsa.getBigPrime();
-	q = rsa.getBigPrime();
+	p = to_ZZ(37);
+	q = to_ZZ(23);
 	n = p * q;
-	cipherKey 	= rsa.generateCipherKey(p, q);
+	// e=5, d=317, n=851
+	cipherKey 	= 5;
 	message 	= "This is my cool message with random senseless stuff";
 	ciphered	= rsa.cipher(message, cipherKey, n);
 
@@ -255,11 +265,13 @@ void test_rsaDecipher()
 	string message, deciphered;
 	vector<ZZ> ciphered;
 
-	p 			= rsa.getBigPrime();
-	q 			= rsa.getBigPrime();
-	n			= p * q;
-	cipherKey 	= rsa.generateCipherKey(p, q);
-	decipherKey = rsa.generateDecipherKey(cipherKey, p, q);
+	// n = 82142659
+	p = to_ZZ(7669);
+	q = to_ZZ(10711);
+	n = p * q;
+	cipherKey 	= 37;
+
+	decipherKey = 48830653;
 	message 	= "This is my cool message with random senseless stuff";
 	ciphered	= rsa.cipher(message, cipherKey, n);
 	deciphered	= rsa.decipher(ciphered, decipherKey, n);
@@ -272,7 +284,7 @@ void test_rsaDecipher()
 	cout << "decipherKey = "<< decipherKey << endl;
 	cout << "message = " 	<< message << endl;
 	//cout << "ciphered = " 	<< ciphered << endl;
-	//cout << "deciphered = " 	<< deciphered << endl;
+	cout << "deciphered = " 	<< deciphered << endl;
 
 	cout << "****** End-Test: rsaDecipher() ******" << endl << endl;
 }

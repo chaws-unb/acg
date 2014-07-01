@@ -17,7 +17,7 @@ ZZ RSA::bigRandom(const ZZ& n, const ZZ& seed, unsigned short numberOfBits)
 	for(i = 0; (i + 8) < numberOfBits;)
 	{
 		t = rand() % 255;
-		cout << "t = " << (int)t << endl;
+		//cout << "t = " << (int)t << endl;
 		t += 2;
 
 		// Set the bits

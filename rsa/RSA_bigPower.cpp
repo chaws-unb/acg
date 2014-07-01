@@ -2,8 +2,8 @@
 
 ZZ RSA::bigPower(const ZZ& base, const ZZ& exp, const ZZ& n)
 {
-	if(DEBUG)
-		cout << "*** DEBUG: bigPower()..." << endl;
+//	if(DEBUG)
+//		cout << "*** DEBUG: bigPower()..." << endl;
 
     ZZ result;
     ZZ temp = base;

@@ -91,6 +91,12 @@ public:
 	 *	Cipher 'message' with 'cipherKey' and 'modN'
 	 */
 	string decipher(const vector<ZZ> &cipheredMessage, const ZZ& decipherKey, const ZZ& n);
+
+	int calcBlockSize(const ZZ& n);
+
+	string convertNumeric(const string& message, int blockSize);
+
+	ZZ s_to_ZZ(string str);
 };
 
 #endif

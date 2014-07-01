@@ -3,6 +3,7 @@
 // Miller-Rabin test
 bool MRTest(const ZZ& n, const ZZ& x)
 {
+	RSA rsa(20);
 	ZZ m, y, z;
 	long j, k;
 
@@ -19,8 +20,8 @@ bool MRTest(const ZZ& n, const ZZ& x)
 		m /= 2;
 	}
 
-	z = PowerMod(x, m, n); // z = x^m % n
-	//z = bigPower(x, m, n); // z = x^m % n AQUIIIIIIIIIIIII
+	//z = PowerMod(x, m, n); // z = x^m % n
+	z = rsa.bigPower(x, m, n); // z = x^m % n AQUIIIIIIIIIIIII
 	if(z == 1) 
 		return false;
 

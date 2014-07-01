@@ -2,20 +2,34 @@
 
 vector<ZZ> RSA::cipher(const string& message, const ZZ& cipherKey, const ZZ& n)
 {
-	if(DEBUG)
-		cout << "*** DEBUG: rsaCipher()..." << endl;
-
-	size_t length = message.length();
-	int i;
-	vector<ZZ> ciphered;
+	RSA rsa(20);
 	ZZ C;
-	for(i = 0; i < length; i++)
+	size_t length = message.length();
+	int blockSize = rsa.calcBlockSize(n);
+	string numericMessage = rsa.convertNumeric(message, blockSize);
+	if(DEBUG)
 	{
-		C = bigPower(conv<ZZ>(message[i]), cipherKey, n);
-		if(DEBUG)
-			;//cout << "[" << message[i] << "] = " << C << endl;
+		cout << "*** DEBUG: rsaCipher()..." << endl;
+		cout << "*** DEBUG: N: " << n << "..." << endl;
+		cout << "*** DEBUG: block size: " << blockSize << "..." << endl;
+		cout << "*** DEBUG: numeric: [" << numericMessage << "]..." << endl;
+		cout << "!";
+	}
+	ZZ i;
+		cout << ".";
+	vector<ZZ> ciphered;
+
+		cout << ".";
+	for(i=to_ZZ(0) ; i<to_ZZ(length) ; i+=n)
+	{
+		cout << ".";
+		string block = numericMessage.substr(to_int(i),blockSize);
+		ZZ zblock = s_to_ZZ(block);
+		C = bigPower(zblock, cipherKey, n);
 		ciphered.push_back(C);
 	}
+	cout << "-";
+
 
 	return ciphered;
 }
